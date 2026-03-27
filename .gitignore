@@ -1,5 +1,6 @@
 .env
 .venv/
+.onion/
 __pycache__/
 .vscode/
 *.pyc

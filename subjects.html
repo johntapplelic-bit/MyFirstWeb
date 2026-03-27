@@ -337,6 +337,7 @@
                         <textarea id="philosophy-question" placeholder="Ask about readings, assignments, or philosophical concepts..."></textarea>
                         <button class="btn-primary philosophy" onclick="askPhilosophy()">Send</button>
                     </div>
+                    <p id="philosophy-chat-status" style="margin-top: 0.5rem; font-size: 0.82rem; color: #666;"></p>
                     <button class="btn-secondary" onclick="clearPhilosophyChat()">Clear Chat</button>
                 </div>
             </div>
@@ -348,6 +349,8 @@
         const PHILOSOPHY_CHAT_KEY = 'phil-chat-v1';
         const SELECTED_SUBJECT_KEY = 'selected-subject-v1';
         const PHILOSOPHY_MODE_KEY = 'phil-answer-mode-v1';
+        const PHILOSOPHY_PROVIDER = 'ollama';
+        const PHILOSOPHY_MODEL = 'llama3.2:3b';
 
         let chemistryChatMessages = [];
         let philosophyChatMessages = [];
@@ -388,6 +391,82 @@
             if (modePicker && modePicker.value !== normalized) {
                 modePicker.value = normalized;
             }
+        }
+
+        function setPhilosophyStatus(text, ok = false) {
+            const el = document.getElementById('philosophy-chat-status');
+            if (!el) {
+                return;
+            }
+
+            el.textContent = text || '';
+            el.style.color = ok ? '#2e7d32' : '#666';
+        }
+
+        function getActiveSubjectWeekContext() {
+            const container = document.getElementById('philosophy-content');
+            const titleEl = container ? container.querySelector('h3') : null;
+            const title = titleEl ? titleEl.textContent.trim() : 'Philosophy of Religion';
+            const details = container ? String(container.innerText || '').replace(/\s+/g, ' ').trim().slice(0, 3000) : '';
+
+            return {
+                title,
+                details
+            };
+        }
+
+        function buildSubjectLivePhilosophyPrompt(mode, context) {
+            const directMode = mode === 'direct';
+            const styleGuide = directMode
+                ? 'Return a direct, assignment-ready answer in your own words. Keep it concise, structured, and academically precise.'
+                : 'Use a calm one-on-one mentor tone with practical guidance, concise encouragement, and clear step-by-step structure.';
+
+            return [
+                'You are Ms. Maya Alvarado Lopez, a grounded Philosophy of Religion instructor.',
+                styleGuide,
+                'Ground every response in the provided week context when available.',
+                'Do not invent readings or requirements not present in the context.',
+                `Current week context title: ${context.title}`
+            ].join(' ');
+        }
+
+        async function requestSubjectLivePhilosophyReply(question, mode) {
+            const context = getActiveSubjectWeekContext();
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    provider: PHILOSOPHY_PROVIDER,
+                    model: PHILOSOPHY_MODEL,
+                    temperature: mode === 'direct' ? 0.45 : 0.7,
+                    max_tokens: mode === 'direct' ? 460 : 620,
+                    messages: [
+                        {
+                            role: 'system',
+                            content: buildSubjectLivePhilosophyPrompt(mode, context)
+                        },
+                        {
+                            role: 'user',
+                            content:
+                                `Student question: ${question}\n\n` +
+                                `Active week: ${context.title}\n` +
+                                `Week details:\n${context.details || 'No active week content available.'}`
+                        }
+                    ]
+                })
+            });
+
+            const payload = await response.json().catch(() => ({}));
+            if (!response.ok) {
+                throw new Error(payload.error || `HTTP ${response.status}`);
+            }
+
+            const content = sanitizePersonaText(String(payload.content || '').trim());
+            if (!content) {
+                throw new Error('Live AI returned empty content.');
+            }
+
+            return content;
         }
 
         // Chemistry lessons
@@ -1127,17 +1206,27 @@
                 `4. Keep the response analytical, not evaluative.`;
         }
 
-        function askPhilosophy() {
+        async function askPhilosophy() {
             const input = document.getElementById('philosophy-question');
             const text = input.value.trim();
             if (!text) return;
 
             addChatMessage('philosophy', 'user', text);
             const mode = getPhilosophyAnswerMode();
-            const reply = mode === 'direct'
-                ? buildDirectDraftPhilosophyReply(text)
-                : buildPhilosophyReply(text);
+            setPhilosophyStatus('Generating response...', true);
+
+            let reply = '';
+            try {
+                reply = await requestSubjectLivePhilosophyReply(text, mode);
+            } catch (err) {
+                reply = mode === 'direct'
+                    ? buildDirectDraftPhilosophyReply(text)
+                    : buildPhilosophyReply(text);
+                setPhilosophyStatus('Live AI unavailable. Used week-based local response.');
+            }
+
             addChatMessage('philosophy', 'ai', reply);
+            setPhilosophyStatus('Response generated.', true);
             
             input.value = '';
         }

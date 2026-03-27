@@ -3077,6 +3077,9 @@
                 const storedSettings = localStorage.getItem(LIVE_API_SETTINGS_KEY);
                 const parsedSettings = storedSettings ? JSON.parse(storedSettings) : DEFAULT_LIVE_API_SETTINGS;
                 liveApiSettings = normalizeLiveApiSettings(parsedSettings);
+                // Keep compatibility/proxy mode enabled automatically on startup.
+                liveApiSettings.useProxy = true;
+                saveLiveApiSettings();
             } catch (error) {
                 console.error('Unable to load live API settings.', error);
                 liveApiSettings = { ...DEFAULT_LIVE_API_SETTINGS };

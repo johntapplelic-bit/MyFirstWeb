@@ -1557,6 +1557,8 @@
     <script>
         const STORAGE_KEY = "philosophyCourseChatV1";
         const ANSWER_MODE_KEY = "philosophyAnswerModeV1";
+        const PHILOSOPHY_PROVIDER = "ollama";
+        const PHILOSOPHY_MODEL = "llama3.2:3b";
 
         function nowStamp() {
             return new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
@@ -1655,6 +1657,82 @@
             const el = document.getElementById("status");
             el.textContent = text;
             el.className = ok ? "status ok" : "status";
+        }
+
+        function getActiveWeekContext() {
+            const activeModule = document.querySelector(".module-content.active");
+            if (!activeModule) {
+                return {
+                    title: "Philosophy of Religion",
+                    summary: "No specific week is selected.",
+                    details: ""
+                };
+            }
+
+            const titleEl = activeModule.querySelector("h3");
+            const subtleEl = activeModule.querySelector(".module-header .subtle");
+            const title = titleEl ? titleEl.textContent.trim() : "Current Week";
+            const summary = subtleEl ? subtleEl.textContent.trim() : "";
+            const details = String(activeModule.innerText || "").replace(/\s+/g, " ").trim().slice(0, 3000);
+
+            return { title, summary, details };
+        }
+
+        function buildLivePhilosophySystemPrompt(mode, context) {
+            const directMode = mode === "direct";
+            const styleGuide = directMode
+                ? "Return a direct, assignment-ready answer in your own words. Be concise, structured, and academically precise. Do not output meta-commentary."
+                : "Use a calm one-on-one mentor tone with practical guidance, concise encouragement, and clear step-by-step structure.";
+
+            return [
+                "You are Ms. Maya Alvarado Lopez, a grounded Philosophy of Religion instructor.",
+                styleGuide,
+                "Ground every response in the provided week context when available.",
+                "Do not invent readings or requirements not present in the context.",
+                "When the student asks about an assignment, respond with draft-ready wording and a clear structure they can submit after personal revision.",
+                `Current week context title: ${context.title}`,
+                context.summary ? `Current week context summary: ${context.summary}` : ""
+            ].filter(Boolean).join(" ");
+        }
+
+        async function requestLivePhilosophyReply(question, mode) {
+            const context = getActiveWeekContext();
+            const response = await fetch("/api/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    provider: PHILOSOPHY_PROVIDER,
+                    model: PHILOSOPHY_MODEL,
+                    temperature: mode === "direct" ? 0.45 : 0.7,
+                    max_tokens: mode === "direct" ? 460 : 620,
+                    messages: [
+                        {
+                            role: "system",
+                            content: buildLivePhilosophySystemPrompt(mode, context)
+                        },
+                        {
+                            role: "user",
+                            content:
+                                `Student question: ${question}\n\n` +
+                                `Active week: ${context.title}\n` +
+                                `${context.summary ? `Week summary: ${context.summary}\n` : ""}` +
+                                `Week details:\n${context.details || "No active week content available."}`
+                        }
+                    ]
+                })
+            });
+
+            const payload = await response.json().catch(() => ({}));
+            if (!response.ok) {
+                throw new Error(payload.error || `HTTP ${response.status}`);
+            }
+
+            const content = sanitizePersonaText(String(payload.content || "").trim());
+            if (!content) {
+                throw new Error("Live AI returned empty content.");
+            }
+
+            return content;
         }
 
         function extractRequestedWeekKey(text) {
@@ -2017,7 +2095,7 @@
                 `4. Keep wording analytical, not evaluative.`;
         }
 
-        function askAI() {
+        async function askAI() {
             const input = document.getElementById("question");
             const text = input.value.trim();
             if (!text) {
@@ -2027,9 +2105,21 @@
 
             addMessage("user", text);
             const mode = getAnswerMode();
-            const reply = mode === "direct"
-                ? buildDirectReply(text)
-                : applyGroundedPhilosophyTone(text, buildReply(text));
+            setStatus("Generating response...", true);
+
+            let reply = "";
+            try {
+                reply = await requestLivePhilosophyReply(text, mode);
+            } catch (err) {
+                const fallback = mode === "direct"
+                    ? buildDirectReply(text)
+                    : buildReply(text);
+                reply = mode === "direct"
+                    ? fallback
+                    : applyGroundedPhilosophyTone(text, fallback);
+                setStatus("Live AI unavailable. Used week-based local response.");
+            }
+
             addMessage("ai", reply);
 
             input.value = "";
