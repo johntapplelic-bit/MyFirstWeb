@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Hub - Chemistry & Philosophy</title>
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 18px;
+        }
+
+        .app {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Subject Switcher */
+        .subject-switcher {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+
+        .subject-btn {
+            padding: 12px 24px;
+            border: 2px solid #999;
+            background: white;
+            color: #333;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .subject-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .subject-btn.active.chemistry {
+            background: #2e7d32;
+            color: white;
+            border-color: #1b5e20;
+        }
+
+        .subject-btn.active.philosophy {
+            background: #7a1bb3;
+            color: white;
+            border-color: #5b1287;
+        }
+
+        .subject-content {
+            display: none;
+        }
+
+        .subject-content.active {
+            display: block;
+        }
+
+        /* Chemistry Styles */
+        .chemistry-section {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .chemistry-section h1 {
+            color: #2e7d32;
+            margin-top: 0;
+        }
+
+        .chemistry-section h2 {
+            color: #558b2f;
+            border-bottom: 2px solid #c8e6c9;
+            padding-bottom: 8px;
+        }
+
+        /* Philosophy Styles */
+        .philosophy-section {
+            background: linear-gradient(180deg, #fcfaff 0%, #f3ecff 100%);
+            border-radius: 14px;
+            border: 1px solid #e4d7f5;
+            padding: 20px;
+            box-shadow: 0 6px 20px rgba(77, 27, 118, 0.08);
+        }
+
+        .philosophy-section h1 {
+            color: #5b1287;
+            margin-top: 0;
+        }
+
+        .philosophy-section h2 {
+            color: #5b1287;
+            border-bottom: 2px solid #e4d7f5;
+            padding-bottom: 8px;
+        }
+
+        /* Shared Styles */
+        .card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        button {
+            border: none;
+            border-radius: 6px;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-primary.chemistry {
+            background: #2e7d32;
+            color: white;
+        }
+
+        .btn-primary.chemistry:hover {
+            background: #1b5e20;
+        }
+
+        .btn-primary.philosophy {
+            background: #7a1bb3;
+            color: white;
+        }
+
+        .btn-primary.philosophy:hover {
+            background: #5b1287;
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #c0c0c0;
+        }
+
+        /* Chat Styles */
+        .chat-container {
+            margin-top: 20px;
+        }
+
+        .chat-history {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 12px;
+            height: 300px;
+            overflow-y: auto;
+            margin-bottom: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .chat-message {
+            padding: 8px 12px;
+            border-radius: 6px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+
+        .chat-message.user {
+            background: #c8e6c9;
+            color: #1b5e20;
+            align-self: flex-end;
+        }
+
+        .chat-message.ai {
+            background: #e8f5e9;
+            color: #2e7d32;
+            align-self: flex-start;
+        }
+
+        .chat-input-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .chat-input-row textarea {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 50px;
+        }
+
+        .chat-input-row button {
+            align-self: flex-start;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .subject-switcher {
+                flex-direction: column;
+            }
+
+            .chat-message {
+                max-width: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="ai-mode-banner" style="font-family:'Segoe UI',Tahoma,sans-serif;display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:10px;margin:10px 0 16px;font-size:0.88rem;font-weight:600;background:#f5f5f5;border:1px dashed #bbb;color:#555;">
+        <span id="ai-mode-badge" style="padding:3px 9px;border-radius:999px;font-size:0.76rem;text-transform:uppercase;letter-spacing:.05em;background:#ccc;color:#555;">Checking…</span>
+        <span id="ai-mode-text">Detecting AI mode…</span>
+    </div>
+
+    <div class="app">
+        <div class="subject-switcher">
+            <button class="subject-btn active chemistry" data-subject="chemistry" onclick="switchSubject('chemistry', this)">🧪 Chemistry</button>
+            <button class="subject-btn philosophy" data-subject="philosophy" onclick="switchSubject('philosophy', this)">📚 Philosophy</button>
+        </div>
+
+        <!-- CHEMISTRY SECTION -->
+        <div id="chemistry" class="subject-content active">
+            <div class="chemistry-section">
+                <h1>🧪 Chemistry Fundamentals 007</h1>
+                <p>Welcome to Ms. Maya Alvarado Lopez's Chemistry Course! Choose a lesson below to begin learning.</p>
+
+                <div class="card">
+                    <h2>📚 Quick Navigation</h2>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px;">
+                        <button class="btn-primary chemistry" onclick="switchSubjectAndShowLesson('chemistry', 'atoms')">Atoms & Elements</button>
+                        <button class="btn-primary chemistry" onclick="switchSubjectAndShowLesson('chemistry', 'molecules')">Molecules</button>
+                        <button class="btn-primary chemistry" onclick="switchSubjectAndShowLesson('chemistry', 'periodic')">Periodic Table</button>
+                        <button class="btn-primary chemistry" onclick="switchSubjectAndShowLesson('chemistry', 'chapter2')">Measurements</button>
+                        <button class="btn-primary chemistry" onclick="switchSubjectAndShowLesson('chemistry', 'chemists')">Nobel Laureates</button>
+                    </div>
+                </div>
+
+                <div id="chemistry-content" class="card">
+                    <p>Select a topic from above or ask a question in the chat below.</p>
+                </div>
+
+                <div class="chat-container">
+                    <h3>💬 Chemistry Q&A Assistant</h3>
+                    <div id="chemistry-chat-history" class="chat-history"></div>
+                    <div class="chat-input-row">
+                        <textarea id="chemistry-question" placeholder="Ask your chemistry question..."></textarea>
+                        <button class="btn-primary chemistry" onclick="askChemistry()">Send</button>
+                    </div>
+                    <button class="btn-secondary" onclick="clearChemistryChat()">Clear Chat</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- PHILOSOPHY SECTION -->
+        <div id="philosophy" class="subject-content">
+            <div class="philosophy-section">
+                <h1>📚 Philosophy of Religion: Structured Course</h1>
+                <p class="subtle">A structured course in philosophical analysis of religious questions. No textbook required—all readings are free IEP and SEP materials.</p>
+
+                <div style="background: #f7ecfd; border-left: 4px solid #7a1bb3; padding: 12px; margin: 15px 0; border-radius: 6px;">
+                    <h3 style="margin-top: 0; color: #5b1287;">Course Goals</h3>
+                    <p>This course teaches you how philosophers analyze religious problems using conceptual clarity, argument structure, and attention to unresolved disagreement.</p>
+                </div>
+
+                <div class="card">
+                    <h2>📖 Course Modules</h2>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 8px;">
+                        <button class="btn-primary philosophy" onclick="switchSubjectAndShowModule('philosophy', 'week1')">Week 1: Philosophy Intro</button>
+                        <button class="btn-primary philosophy" onclick="switchSubjectAndShowModule('philosophy', 'week2')">Week 2: Faith & Reason</button>
+                        <button class="btn-primary philosophy" onclick="switchSubjectAndShowModule('philosophy', 'week3')">Week 3: Religious Language</button>
+                        <button class="btn-primary philosophy" onclick="switchSubjectAndShowModule('philosophy', 'week4')">Week 4: Ontological Arguments</button>
+                        <button class="btn-primary philosophy" onclick="switchSubjectAndShowModule('philosophy', 'week5')">Week 5: Cosmological Arguments</button>
+                        <button class="btn-primary philosophy" onclick="switchSubjectAndShowModule('philosophy', 'week6')">Final Review 6: Teleological</button>
+                        <button class="btn-primary philosophy" onclick="switchSubjectAndShowModule('philosophy', 'week7')">Final Review 7: Atheism/Agnosticism</button>
+                        <button class="btn-primary philosophy" onclick="switchSubjectAndShowModule('philosophy', 'week8')">Final Review 8: Evil</button>
+                        <button class="btn-primary philosophy" onclick="switchSubjectAndShowModule('philosophy', 'week9')">Final Review 9: Experience</button>
+                        <button class="btn-primary philosophy" onclick="switchSubjectAndShowModule('philosophy', 'week10')">Final Review 10: Miracles</button>
+                        <button class="btn-primary philosophy" onclick="switchSubjectAndShowModule('philosophy', 'week11')">Week 11: Revelation</button>
+                        <button class="btn-primary philosophy" onclick="switchSubjectAndShowModule('philosophy', 'week12')">Week 12: Religion & Morality</button>
+                        <button class="btn-primary philosophy" onclick="switchSubjectAndShowModule('philosophy', 'week13')">Week 13: Feminist Philosophy of Religion</button>
+                        <button class="btn-primary philosophy" onclick="switchSubjectAndShowModule('philosophy', 'week14')">Week 14: Religion & Violence</button>
+                        <button class="btn-primary philosophy" onclick="switchSubjectAndShowModule('philosophy', 'week15')">Week 15: Religious Pluralism</button>
+                        <button class="btn-primary philosophy" onclick="switchSubjectAndShowModule('philosophy', 'week16')">Week 16: Faith, Doubt, and Disagreement</button>
+                    </div>
+                    <div style="margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+                        <label for="philosophy-week-jump"><strong>Quick Jump:</strong></label>
+                        <select id="philosophy-week-jump" style="flex: 1 1 280px; min-width: 220px; padding: 8px; border-radius: 8px; border: 1px solid #c7c7c7;">
+                            <option value="week1">Week 1: Philosophy Intro</option>
+                            <option value="week2">Week 2: Faith & Reason</option>
+                            <option value="week3">Week 3: Religious Language</option>
+                            <option value="week4">Week 4: Ontological Arguments</option>
+                            <option value="week5">Week 5: Cosmological Arguments</option>
+                            <option value="week6">Final Review Week 6: Teleological Arguments</option>
+                            <option value="week7">Final Review Week 7: Atheism & Agnosticism</option>
+                            <option value="week8">Final Review Week 8: Problem of Evil</option>
+                            <option value="week9">Final Review Week 9: Religious Experience</option>
+                            <option value="week10">Final Review Week 10: Miracles</option>
+                            <option value="week11">Week 11: Revelation</option>
+                            <option value="week12">Week 12: Religion & Morality</option>
+                            <option value="week13">Week 13: Feminist Philosophy of Religion</option>
+                            <option value="week14">Week 14: Religion & Violence</option>
+                            <option value="week15">Week 15: Religious Pluralism</option>
+                            <option value="week16">Week 16: Faith, Doubt, and Disagreement</option>
+                        </select>
+                        <button class="btn-primary philosophy" onclick="goToSelectedPhilosophyWeek()">Open Week</button>
+                    </div>
+                </div>
+
+                <div id="philosophy-content" class="card">
+                    <p>Select a week from above or ask a question in the chat below.</p>
+                </div>
+
+                <div class="chat-container">
+                    <h3>💬 Philosophy Study Assistant</h3>
+                    <p style="font-size: 0.9rem; color: #666;">Meet Ms. Maya Alvarado Lopez, your grounded mentor & coach</p>
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin: 0.4rem 0 0.75rem 0;">
+                        <label for="philosophy-answer-mode" style="font-size: 0.85rem; color: #666;">Answer Mode:</label>
+                        <select id="philosophy-answer-mode" style="max-width: 200px;" onchange="setPhilosophyAnswerMode(this.value)">
+                            <option value="coaching">Coaching</option>
+                            <option value="direct">Direct Draft</option>
+                        </select>
+                    </div>
+                    <div id="philosophy-chat-history" class="chat-history"></div>
+                    <div class="chat-input-row">
+                        <textarea id="philosophy-question" placeholder="Ask about readings, assignments, or philosophical concepts..."></textarea>
+                        <button class="btn-primary philosophy" onclick="askPhilosophy()">Send</button>
+                    </div>
+                    <button class="btn-secondary" onclick="clearPhilosophyChat()">Clear Chat</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const CHEMISTRY_CHAT_KEY = 'chem-chat-v1';
+        const PHILOSOPHY_CHAT_KEY = 'phil-chat-v1';
+        const SELECTED_SUBJECT_KEY = 'selected-subject-v1';
+        const PHILOSOPHY_MODE_KEY = 'phil-answer-mode-v1';
+
+        let chemistryChatMessages = [];
+        let philosophyChatMessages = [];
+
+        function sanitizePersonaText(text) {
+            if (typeof text !== 'string') {
+                return text;
+            }
+
+            return text
+                .replace(/Taurus-ISFJ/gi, 'Grounded Mentor')
+                .replace(/Taurus woman/gi, 'grounded')
+                .replace(/ISFJ \(Defender\)/gi, 'grounded')
+                .replace(/ISFJ mentor\s*&\s*coach/gi, 'grounded mentor & coach');
+        }
+
+        function sanitizeChatHistory(messages) {
+            if (!Array.isArray(messages)) {
+                return [];
+            }
+
+            return messages.map(msg => ({
+                ...msg,
+                text: sanitizePersonaText(msg.text)
+            }));
+        }
+
+        function getPhilosophyAnswerMode() {
+            const mode = localStorage.getItem(PHILOSOPHY_MODE_KEY);
+            return mode === 'direct' ? 'direct' : 'coaching';
+        }
+
+        function setPhilosophyAnswerMode(mode) {
+            const normalized = mode === 'direct' ? 'direct' : 'coaching';
+            localStorage.setItem(PHILOSOPHY_MODE_KEY, normalized);
+
+            const modePicker = document.getElementById('philosophy-answer-mode');
+            if (modePicker && modePicker.value !== normalized) {
+                modePicker.value = normalized;
+            }
+        }
+
+        // Chemistry lessons
+        const chemistryLessons = {
+            atoms: {
+                title: "Atoms and Elements",
+                content: `
+                    <h3>What is an Atom?</h3>
+                    <p>An atom is the smallest unit of matter that retains the chemical properties of an element. Atoms are made up of three main particles:</p>
+                    <ul>
+                        <li><strong>Protons</strong> - Positively charged particles in the nucleus</li>
+                        <li><strong>Neutrons</strong> - Neutral particles in the nucleus</li>
+                        <li><strong>Electrons</strong> - Negatively charged particles orbiting the nucleus</li>
+                    </ul>
+                    <h3>Elements</h3>
+                    <p>Elements are pure substances made of only one type of atom. There are 118 known elements, each with a unique atomic number (number of protons).</p>
+                `
+            },
+            molecules: {
+                title: "Molecules and Compounds",
+                content: `
+                    <h3>What is a Molecule?</h3>
+                    <p>A molecule is formed when two or more atoms bond together chemically.</p>
+                    <ul>
+                        <li><strong>Diatomic molecules:</strong> Two atoms (O₂, N₂, H₂)</li>
+                        <li><strong>Polyatomic molecules:</strong> More than two atoms (H₂O, CO₂, C₆H₁₂O₆)</li>
+                    </ul>
+                `
+            },
+            periodic: {
+                title: "The Periodic Table",
+                content: `
+                    <h3>Organization of Elements</h3>
+                    <p>The periodic table arranges elements by increasing atomic number and similar chemical properties.</p>
+                    <h3>Key Features:</h3>
+                    <ul>
+                        <li><strong>Periods:</strong> Horizontal rows (1-7)</li>
+                        <li><strong>Groups:</strong> Vertical columns (1-18)</li>
+                        <li><strong>Metals:</strong> Left side and bottom</li>
+                        <li><strong>Nonmetals:</strong> Right side</li>
+                    </ul>
+                `
+            },
+            chapter2: {
+                title: "Chemistry and Measurements",
+                content: `
+                    <h3>📏 Units of Measurement</h3>
+                    <p>Scientists use the metric system: length (meter), mass (gram), volume (liter), temperature (Celsius/Kelvin).</p>
+                    <h3>Key Conversions:</h3>
+                    <ul>
+                        <li>1 km = 1,000 m</li>
+                        <li>1 kg = 2.20 lb</li>
+                        <li>2.54 cm = 1 in</li>
+                    </ul>
+                `
+            },
+            chemists: {
+                title: "Nobel Prize Winners in Chemistry",
+                content: `
+                    <h3>🏆 Recent Nobel Laureates</h3>
+                    <h4>2022 Winners:</h4>
+                    <ul>
+                        <li><strong>Carolyn Bertozzi</strong> - Bioorthogonal chemistry</li>
+                        <li><strong>K. Barry Sharpless</strong> - Click chemistry (second Nobel Prize)</li>
+                        <li><strong>Morten Meldal</strong> - Click chemistry</li>
+                    </ul>
+                `
+            }
+        };
+
+        function switchSubject(subject, triggerButton = null) {
+            // Update buttons
+            document.querySelectorAll('.subject-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            const activeButton = triggerButton || document.querySelector(`.subject-btn[data-subject="${subject}"]`);
+            if (activeButton) {
+                activeButton.classList.add('active');
+            }
+
+            // Update content
+            document.querySelectorAll('.subject-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(subject).classList.add('active');
+
+            localStorage.setItem(SELECTED_SUBJECT_KEY, subject);
+        }
+
+        function switchSubjectAndShowLesson(subject, lesson) {
+            switchSubject(subject);
+            if (subject === 'chemistry') {
+                showChemistryLesson(lesson);
+            }
+        }
+
+        function switchSubjectAndShowModule(subject, module) {
+            switchSubject(subject);
+            if (subject === 'philosophy') {
+                showPhilosophyModule(module);
+            }
+        }
+
+        function showChemistryLesson(lessonKey) {
+            const lesson = chemistryLessons[lessonKey];
+            if (!lesson) return;
+            
+            const container = document.getElementById('chemistry-content');
+            container.innerHTML = `<h3>${lesson.title}</h3>${lesson.content}`;
+        }
+
+        function showPhilosophyModule(moduleKey) {
+            const modules = {
+                week1: {
+                    title: "Week 1: What is Philosophy of Religion?",
+                    content: `<p>Philosophy of Religion examines religious ideas using philosophical tools: conceptual clarity, argument analysis, and attention to disagreement.</p>
+                              <p><strong>Discussion:</strong> What interests you about philosophy? What is philosophy for? What will be challenging?</p>`
+                },
+                week2: {
+                    title: "Week 2: Faith, Reason, and Authority",
+                    content: `<p>Philosophers debate what faith means and how it relates to evidence and reason. Understanding these distinctions helps clarify debates.</p>
+                              <p><strong>Assignment:</strong> Concept Extraction Brief - identify one key concept from readings.</p>`
+                },
+                week3: {
+                    title: "Week 3: Religious Language",
+                    content: `<p>Many disputes about religion depend on whether religious claims should be understood literally, symbolically, or analogically.</p>
+                              <p><strong>Assignment:</strong> Analyze how language shapes philosophical arguments.</p>`
+                },
+                week4: {
+                    title: "Week 4: Ontological Arguments",
+                    content: `<p><strong>What this week is about:</strong> Ontological arguments attempt to derive existence from concepts alone. Philosophers analyze where pressure is placed on the logic, definitions, and necessity claims involved.</p>
+                              <p><strong>Required reading:</strong> IEP <a href="https://iep.utm.edu/anselm-ontological-argument/" target="_blank">Ontological Arguments</a> and the SEP Companion Sheet on Ontological Arguments.</p>
+                              <p><strong>Core distinction:</strong> unlike cosmological or teleological arguments, ontological arguments do not begin from observations of the world.</p>
+                              <p><strong>What to pull out:</strong> (1) defining feature of ontological arguments, (2) one reason they remain philosophically interesting even when rejected, (3) one general type of objection.</p>
+                              <p><strong>Assignment:</strong> Argument Structure Analysis #1 (500-600 words). Part A: reconstruct starting assumption, key logical move, and conclusion from one IEP argument/challenge. Part B: identify one SEP pressure and classify it as targeting logic, assumptions, or standards of evidence; explain why this does not automatically end the argument.</p>
+                              <p><strong>Constraints:</strong> no personal belief statements, no outside research, no quotation-based critique; focus on structure.</p>
+                              <p><strong>CLO alignment:</strong> supports SLO 2 (philosophical discourse) and SLO 4 (constructing philosophical arguments).</p>
+                              <p><strong>Self-check:</strong> Why do ontological arguments test the limits of reason more directly than other arguments for God's existence?</p>`
+                },
+                week5: {
+                    title: "Week 5: Cosmological Arguments",
+                    content: `<p><strong>What this week is about:</strong> Cosmological arguments attempt to explain why anything exists at all. The emphasis is on types of explanation, causation, and necessity.</p>
+                              <p><strong>Core distinction:</strong> Philosophers distinguish causal explanation from metaphysical explanation and disagree about what counts as an ultimate explanation.</p>
+                              <p><strong>Required reading:</strong> IEP <a href="https://iep.utm.edu/religion/#SH4b" target="_blank">Cosmological Arguments</a> and the SEP Companion Sheet on Cosmological Arguments.</p>
+                              <p><strong>SEP focus:</strong> contingency vs necessity, why infinite regress matters, and why disagreement often turns on standards of explanation rather than missing evidence.</p>
+                              <p><strong>Extract these points:</strong> (1) difference between contingent and necessary beings, (2) one reason explanation is prioritized over observation, (3) one objection to first-cause/necessary-being conclusions.</p>
+                              <p><strong>Assignment:</strong> Concept Extraction Brief #3 (300-400 words). Part A: identify and define one IEP concept and explain why it matters. Part B: identify one SEP distinction, explain what confusion it prevents, and what goes wrong if ignored.</p>
+                              <p><strong>Constraints:</strong> no personal belief statements, no agreement/disagreement language, no outside sources; explain structure only.</p>
+                              <p><strong>CLO alignment:</strong> supports SLO 2 (philosophical discourse) and SLO 4 (constructing philosophical arguments).</p>
+                              <p><strong>Key check:</strong> Why do cosmological arguments focus on explanation rather than empirical observation?</p>`
+                },
+                week6: {
+                    title: "Final Review Week 6: Teleological Arguments",
+                    content: `<p><strong>Final exam review focus:</strong> Separate the design topic from other debates and master its structure on its own terms.</p>
+                              <p><strong>What this week is about:</strong> Design arguments often feel intuitive because order seems to suggest purpose. Philosophers ask what kind of explanation design arguments actually provide.</p>
+                              <p><strong>Required reading:</strong> IEP teleological/design arguments material and the SEP Companion Sheet on Teleological Arguments.</p>
+                              <p><strong>SEP focus:</strong> extract what fine-tuning arguments point to, whether they rely on probability, necessity, or explanation, and one reason philosophers disagree about their strength.</p>
+                              <p><strong>Likely final exam angle:</strong> Reconstruct argument structure without mixing in atheism/agnosticism, evil, or miracles.</p>
+                              <p><strong>Assignment:</strong> Argument Analysis #2. Reconstruct one argument's starting assumption, key logical move, and conclusion, then identify one SEP pressure on its logic, assumptions, or standards of evidence.</p>
+                              <p><strong>Key check:</strong> Why does scientific explanation not automatically eliminate philosophical questions about design?</p>`
+                },
+                week7: {
+                    title: "Final Review Week 7: Atheism and Agnosticism",
+                    content: `<p><strong>Final exam review focus:</strong> Keep nonbelief categories separate and avoid collapsing terms into one topic.</p>
+                              <p><strong>What this week is about:</strong> Nonbelief is not a single position. Philosophers distinguish denying belief, suspending belief, and making knowledge claims.</p>
+                              <p><strong>Required reading:</strong> IEP <em>Atheism</em> and the SEP Companion Sheet on Atheism and Agnosticism.</p>
+                              <p><strong>SEP focus:</strong> extract one definition of atheism, one definition of agnosticism, and one difference in their knowledge claims.</p>
+                              <p><strong>Likely final exam angle:</strong> Distinguish belief claims from knowledge claims with precise language.</p>
+                              <p><strong>Assignment:</strong> Concept Extraction Brief #4. Identify one key concept from the IEP reading and one structural distinction from SEP, then explain why the distinction prevents confusion.</p>
+                              <p><strong>Key check:</strong> Why does it matter whether nonbelief is framed as a knowledge claim or a belief claim?</p>`
+                },
+                week8: {
+                    title: "Final Review Week 8: The Problem of Evil",
+                    content: `<p><strong>Final exam review focus:</strong> Keep logical and evidential versions separate as distinct argument types.</p>
+                              <p><strong>What this week is about:</strong> Philosophers distinguish logical and evidential versions of the problem of evil and ask how evil creates pressure on a traditional conception of God.</p>
+                              <p><strong>Required reading:</strong> IEP <em>Problem of Evil</em> and the SEP Companion Sheet on the logical and evidential problem of evil.</p>
+                              <p><strong>SEP focus:</strong> identify God's three traditional attributes, the claim about evil that creates tension, and how the evidential problem differs from the logical version.</p>
+                              <p><strong>Likely final exam angle:</strong> Classify pressure points by logic, assumptions, and evidence standards.</p>
+                              <p><strong>Assignment:</strong> Argument Structure Analysis #3. Reconstruct one challenge, then explain one philosophical pressure without trying to solve the problem.</p>
+                              <p><strong>Discussion:</strong> choose the logical or evidential version and explain what is lost if the pressure is resolved in either direction.</p>`
+                },
+                week9: {
+                    title: "Final Review Week 9: Religious Experience",
+                    content: `<p><strong>Final exam review focus:</strong> Treat experience as its own evidential topic, separate from miracles and revelation.</p>
+                              <p><strong>What this week is about:</strong> Philosophers debate whether experience can justify belief and what standards of evidence should apply.</p>
+                              <p><strong>Required reading:</strong> IEP <em>Religious Experience</em> (William James and epistemology sections) and the SEP Companion Sheet on Religious Experience.</p>
+                              <p><strong>SEP focus:</strong> identify one reason experience might count as evidence, one reason it might not, and one condition often required before experience has epistemic weight.</p>
+                              <p><strong>Likely final exam angle:</strong> Explain unresolved epistemic tension without trying to resolve it.</p>
+                              <p><strong>Assignment:</strong> Philosophical Tension Memo #1. State one unresolved epistemic tension and explain what is lost if it is resolved in either direction.</p>
+                              <p><strong>Key check:</strong> Why does a powerful experience not automatically justify a belief philosophically?</p>`
+                },
+                week10: {
+                    title: "Final Review Week 10: Miracles",
+                    content: `<p><strong>Final exam review focus:</strong> Keep miracle analysis methodologically separate from design, evil, and religious experience arguments.</p>
+                              <p><strong>What this week is about:</strong> Miracles are treated philosophically as problems of testimony, probability, and standards of proof rather than spectacle.</p>
+                              <p><strong>Required reading:</strong> IEP <em>Miracles</em> and the SEP Companion Sheet on Miracles.</p>
+                              <p><strong>SEP focus:</strong> identify one reason Hume is skeptical of miracle claims, what role testimony plays, and how probability affects evaluation.</p>
+                              <p><strong>Likely final exam angle:</strong> Explain why skepticism focuses on evidence standards rather than bare possibility.</p>
+                              <p><strong>Assignment:</strong> Argument Structure Analysis #4. Reconstruct one argument or challenge from the IEP reading, then identify one SEP pressure on logic, assumptions, or evidence standards.</p>
+                              <p><strong>Separate topic extension (optional):</strong> Revelation, Divine Command Theory, and feminist critiques are distinct units and should be analyzed separately rather than merged into miracle methodology.</p>`
+                },
+                week11: {
+                    title: "Week 11: Revelation",
+                    content: `<p><strong>What this week is about:</strong> This week examines claims of divine revelation across religious traditions and focuses on authority and interpretation.</p>
+                              <p><strong>Philosophical focus:</strong> whether revelation can justify belief, why interpretation complicates authority, and why disagreement can persist even among believers.</p>
+                              <p><strong>Required reading:</strong> IEP <a href="https://iep.utm.edu/faith-contemporary-perspectives/#SSH3aii" target="_blank">Revelation (Faith and Knowledge)</a> and the SEP Companion Sheet on Revelation.</p>
+                              <p><strong>SEP pull-outs:</strong> one epistemic problem in revelation claims, one reason revelation does not override reason, and one source of interpretive disagreement.</p>
+                              <p><strong>How SEP extends IEP:</strong> authority is contested, interpretation cannot be avoided, and revelation can multiply disagreement rather than resolve it.</p>
+                              <p><strong>Assignment:</strong> Philosophical Tension Memo #2 (400-500 words). Part A: identify one tension and the two competing pressures. Part B: explain what is lost if resolved either way, without resolving it.</p>
+                              <p><strong>Constraints:</strong> no solutions/reforms, no personal belief statements, stay within the course philosophical framework.</p>
+                              <p><strong>CLO alignment:</strong> supports SLO 2 (philosophical discourse) and SLO 3 (core philosophical issues in religion).</p>
+                              <p><strong>Key check:</strong> Why does revelation create epistemic problems even for believers?</p>`
+                },
+                week12: {
+                    title: "Week 12: Religion & Morality",
+                    content: `<p><strong>What this week is about:</strong> This week examines whether morality depends on religion. The emphasis is moral reasoning, not obedience.</p>
+                              <p><strong>Philosophical focus:</strong> divine command theory, authority, and moral autonomy.</p>
+                              <p><strong>Required reading:</strong> IEP <a href="https://iep.utm.edu/divine-command-theory/" target="_blank">Religion and Morality (Divine Command Theory)</a> and the SEP Companion Sheet on Religion and Morality.</p>
+                              <p><strong>Purpose:</strong> complicates "religion = morality" assumptions.</p>
+                              <p><strong>SEP pull-outs:</strong> one claim of divine command theory, one problem raised against it, and one reason morality cannot depend entirely on command.</p>
+                              <p><strong>How SEP sharpens IEP:</strong> clarifies precise tension points, why authority does not automatically create obligation, and why moral reasoning cannot be bypassed.</p>
+                              <p><strong>Assignment:</strong> Philosophical Tension Memo #3 (400-500 words). Part A: identify one tension and two competing pressures. Part B: explain what is lost if resolved either way, without resolving the tension.</p>
+                              <p><strong>Constraints:</strong> no solutions/reforms, no personal belief statements, stay within the philosophical framework.</p>
+                              <p><strong>CLO alignment:</strong> supports SLO 2 (philosophical discourse) and SLO 3 (core philosophical issues in religion).</p>
+                              <p><strong>Key check:</strong> Why does grounding morality entirely in divine command create philosophical problems rather than solve them?</p>`
+                },
+                week13: {
+                    title: "Week 13: Feminist Philosophy of Religion",
+                    content: `<p><strong>What this week is about:</strong> This week introduces feminist critiques of religious concepts, language, and authority. The emphasis is on power and structure.</p>
+                              <p><strong>Philosophical focus:</strong> how religious concepts encode power relations and shape authority claims.</p>
+                              <p><strong>Required reading:</strong> IEP baseline <a href="https://iep.utm.edu/religion/" target="_blank">Philosophy of Religion</a> and the SEP Companion Sheet on Feminist Philosophy of Religion.</p>
+                              <p><strong>Purpose:</strong> introduces structural critique.</p>
+                              <p><strong>SEP pull-outs:</strong> one example of language encoding power, one concern about gendered God-language, and one reason neutrality is treated as an illusion.</p>
+                              <p><strong>How SEP changes IEP:</strong> shows how arguments are embedded in social structures and why critique may target systems, standpoints, and power rather than isolated claims alone.</p>
+                              <p><strong>Assignment:</strong> Philosophical Tension Memo #4 (400-500 words). Part A: identify one tension and two competing pressures. Part B: explain what is lost if resolved either way, without resolving the tension.</p>
+                              <p><strong>Discussion:</strong> choose one concept (authority, transcendence, obedience, or purity), show how feminist critique reframes it, and explain why that critique is philosophical rather than merely political.</p>
+                              <p><strong>Constraints:</strong> no solutions/reforms, no personal belief statements, and keep analysis conceptual.</p>
+                              <p><strong>CLO alignment:</strong> supports SLO 2 (philosophical discourse) and SLO 3 (core philosophical issues in religion).</p>
+                              <p><strong>Key check:</strong> Why might critique focus on language and structure rather than truth claims alone?</p>`
+                },
+                week14: {
+                    title: "Week 14: Religion & Violence",
+                    content: `<p><strong>What this week is about:</strong> This week shifts from blame questions to mechanism: how violence becomes morally intelligible in certain frameworks.</p>
+                              <p><strong>Emphasis:</strong> moral framing, not accusation. The key mechanism is dehumanization and moral exclusion.</p>
+                              <p><strong>Required reading:</strong> IEP baseline <a href="https://iep.utm.edu/religion/" target="_blank">Philosophy of Religion</a> and the SEP Companion Sheet on Dehumanization.</p>
+                              <p><strong>Purpose:</strong> resists simplistic narratives about religion and violence.</p>
+                              <p><strong>Conceptual focus:</strong> animalistic vs mechanistic dehumanization, moral status vs moral treatment, and causal explanation vs moral justification.</p>
+                              <p><strong>Assignment:</strong> Philosophical Tension Memo #5 (400-500 words), plus a Comparative Analysis Assignment (900-1,100 words) comparing two course problems through shared philosophical method.</p>
+                              <p><strong>CLO alignment:</strong> SLO 2 and SLO 3 for Week 14 memo; comparative assignment supports SLO 2, SLO 3, and SLO 4.</p>
+                              <p><strong>Key check:</strong> What happens to moral obligations when someone is no longer perceived as fully human?</p>`
+                },
+                week15: {
+                    title: "Week 15: Religious Pluralism",
+                    content: `<p><strong>What this week is about:</strong> This week examines how religious disagreement raises epistemic problems. The emphasis is disagreement and justification.</p>
+                              <p><strong>Philosophical focus:</strong> pluralism, exclusivism, and the costs of disagreement.</p>
+                              <p><strong>Required reading:</strong> IEP <a href="https://iep.utm.edu/rel-plur/" target="_blank">Religious Pluralism</a> and the SEP Companion Sheet on Religious Pluralism.</p>
+                              <p><strong>Purpose:</strong> gives insight on exclusivism vs pluralism in religion.</p>
+                              <p><strong>SEP pull-outs:</strong> one definition of exclusivism, one definition of pluralism, and one philosophical problem raised by religious diversity.</p>
+                              <p><strong>How SEP sharpens IEP:</strong> disagreement is epistemic, sincerity does not resolve incompatibility, and pluralism has its own philosophical costs.</p>
+                              <p><strong>Assignment:</strong> Concept Extraction Brief #5 (300-400 words). Part A: identify, define, and explain one IEP concept. Part B: identify one SEP distinction, what confusion it prevents, and what goes wrong if ignored.</p>
+                              <p><strong>Constraints:</strong> no agreement/disagreement language, no personal belief statements, and no outside sources.</p>
+                              <p><strong>CLO alignment:</strong> supports SLO 2 (philosophical discourse) and SLO 3 (core philosophical issues in religion).</p>
+                              <p><strong>Key check:</strong> Why does widespread religious disagreement challenge rational belief, not only social harmony?</p>`
+                },
+                week16: {
+                    title: "Week 16: Faith, Doubt, and Disagreement",
+                    content: `<p><strong>What this week is about:</strong> This final week examines doubt as a rational response to persistent disagreement. The emphasis is philosophical limits rather than closure.</p>
+                              <p><strong>Method focus:</strong> philosophy can clarify arguments, distinctions, and trade-offs while still ending in unresolved disagreement.</p>
+                              <p><strong>Required reading:</strong> IEP <a href="https://iep.utm.edu/rel-disa/" target="_blank">Religious Disagreement</a> and the SEP Companion Sheet based on <a href="https://plato.stanford.edu/entries/disagreement-moral/" target="_blank">Moral Disagreement</a>.</p>
+                              <p><strong>Purpose:</strong> ends without resolution or reconciliation.</p>
+                              <p><strong>Core idea:</strong> persistent disagreement can remain even among informed, careful, and sincere thinkers due to differing starting commitments and standards of justification.</p>
+                              <p><strong>Pull-outs:</strong> why disagreement can persist among rational thinkers, why lack of resolution is not failure, and why doubt/suspension can be rational outcomes.</p>
+                              <p><strong>Assignment:</strong> complete the Capstone Comparative Analysis by comparing two course problems through shared method and SEP-vs-IEP framing.</p>
+                              <p><strong>Farewell discussion:</strong> explain one insight gained and one unresolved question, then respond to a classmate by identifying a shared insight or question.</p>
+                              <p><strong>CLO alignment:</strong> supports SLO 2, SLO 3, and SLO 4.</p>
+                              <p><strong>Key check:</strong> Why does persistent moral disagreement change how we understand doubt in philosophy of religion?</p>`
+                }
+            };
+
+            const module = modules[moduleKey];
+            if (!module) return;
+
+            const container = document.getElementById('philosophy-content');
+            container.innerHTML = `<h3>${module.title}</h3>${module.content}`;
+
+            const weekJump = document.getElementById('philosophy-week-jump');
+            if (weekJump && weekJump.value !== moduleKey) {
+                weekJump.value = moduleKey;
+            }
+        }
+
+        function goToSelectedPhilosophyWeek() {
+            const picker = document.getElementById('philosophy-week-jump');
+            if (!picker || !picker.value) {
+                return;
+            }
+
+            switchSubjectAndShowModule('philosophy', picker.value);
+        }
+
+        function formatGroundedResponse({
+            appreciation,
+            practicalContext,
+            steps,
+            gentleDetail,
+            closing,
+            moodHint = ''
+        }) {
+            const numberedSteps = (steps || [])
+                .map((step, index) => `${index + 1}. ${step}`)
+                .join('\n');
+
+            const stressDetected = /stress|stressed|overwhelmed|impossible|failing|anxious|panic|burned out|cant|can't/.test(String(moodHint || '').toLowerCase());
+            const groundingLine = stressDetected
+                ? "Let's pull up a chair, have a cup of tea, and look at the details one by one."
+                : "We will focus on steady, tried-and-true steps so we can build a solid foundation together.";
+
+            return `${appreciation}\n\n${practicalContext}\n\n${groundingLine}\n\nLet's work through this together:\n${numberedSteps}\n\n${gentleDetail}\n\n${closing}`;
+        }
+
+        // Chemistry AI
+        function buildChemistryReply(question) {
+            const q = question.toLowerCase();
+            
+            if (q.includes('atom') || q.includes('element')) {
+                return formatGroundedResponse({
+                    appreciation: "I really appreciate how clearly you are focusing on fundamentals. That habit helps us build strong chemistry skills.",
+                    practicalContext: "In practical terms, understanding atoms and elements helps with everything from medication chemistry to material science.",
+                    moodHint: q,
+                    steps: [
+                        "Define atom: the smallest unit of matter that keeps an element's identity.",
+                        "Track core particles: protons, neutrons, and electrons.",
+                        "Connect to elements: each element is defined by proton count (atomic number).",
+                        "Apply it: use proton count to identify where an element sits on the periodic table."
+                    ],
+                    gentleDetail: "A small detail to ensure your success: do not mix up mass number with atomic number. Atomic number is only protons.",
+                    closing: "If you want, we can do a one-on-one quick check with 3 practice examples right now."
+                });
+            }
+            if (q.includes('periodic') || q.includes('table')) {
+                return formatGroundedResponse({
+                    appreciation: "Great question. I appreciate how organized your approach is when you ask about the periodic table first.",
+                    practicalContext: "This is practical because the periodic table is your map for predicting reactions and properties.",
+                    moodHint: q,
+                    steps: [
+                        "Read rows as periods: they show increasing atomic number left to right.",
+                        "Read columns as groups: elements in the same group share similar behavior.",
+                        "Use region clues: metals are mostly left/center, nonmetals are mostly right.",
+                        "Apply prediction: check group first when estimating valence and reactivity."
+                    ],
+                    gentleDetail: "One detail that helps avoid confusion: group number trends are useful, but transition metals can have multiple common charges.",
+                    closing: "We can go step-by-step through one element together if you want a calm confidence check."
+                });
+            }
+            if (q.includes('measurement') || q.includes('metric')) {
+                return formatGroundedResponse({
+                    appreciation: "I appreciate you asking about measurements. Care with units is exactly what strong students do.",
+                    practicalContext: "In real lab and healthcare settings, unit accuracy protects people and improves results.",
+                    moodHint: q,
+                    steps: [
+                        "Start with the base unit: m for length, g for mass, L for volume.",
+                        "Write the conversion factor before calculating.",
+                        "Cancel units visually so only the target unit remains.",
+                        "Round using correct significant figures at the end."
+                    ],
+                    gentleDetail: "A quiet correction that ensures success: convert first, then round. Early rounding can create avoidable errors.",
+                    closing: "If you share one conversion problem, we will solve it together line by line."
+                });
+            }
+            return formatGroundedResponse({
+                appreciation: "Thank you for checking in. Your consistency and effort really stand out.",
+                practicalContext: "To keep this useful, we can stay concrete and solve one real chemistry task at a time.",
+                moodHint: q,
+                steps: [
+                    "Tell me your topic (atoms, periodic table, measurements, reactions, or quiz prep).",
+                    "Share what part feels unclear.",
+                    "We will build a practical mini-plan to complete it today."
+                ],
+                gentleDetail: "Small details matter, so I may gently point out key terms or units that need tightening.",
+                closing: "I am here with you one-on-one. Ask your next question when you are ready."
+            });
+        }
+
+        function askChemistry() {
+            const input = document.getElementById('chemistry-question');
+            const text = input.value.trim();
+            if (!text) return;
+
+            addChatMessage('chemistry', 'user', text);
+            const reply = buildChemistryReply(text);
+            addChatMessage('chemistry', 'ai', reply);
+            
+            input.value = '';
+        }
+
+        // Philosophy AI
+        function extractRequestedWeekKey(text) {
+            const match = String(text || '').toLowerCase().match(/\b(?:week|wk|final review)\s*([0-9]{1,2})\b/);
+            if (!match) {
+                return null;
+            }
+
+            return `week${parseInt(match[1], 10)}`;
+        }
+
+        function getPhilosophyWeekLabel(weekKey) {
+            const picker = document.getElementById('philosophy-week-jump');
+            if (!picker) {
+                return null;
+            }
+
+            const option = picker.querySelector(`option[value="${weekKey}"]`);
+            return option ? option.textContent.trim() : null;
+        }
+
+        function buildWeekSpecificPhilosophyReply(question, q) {
+            const weekKey = extractRequestedWeekKey(question);
+            if (!weekKey) {
+                return null;
+            }
+
+            const weekLabel = getPhilosophyWeekLabel(weekKey);
+            if (!weekLabel) {
+                return null;
+            }
+
+            const assignmentRequested = /assignment|brief|analysis|memo|discussion|due|write|submit/.test(q);
+
+            return formatGroundedResponse({
+                appreciation: `I appreciate how clearly you are focusing on ${weekLabel}. That focus helps you study efficiently.`,
+                practicalContext: `In practical coursework terms, the best approach is to separate the structure of ${weekLabel} from nearby topics and work the required tasks in order.`,
+                moodHint: q,
+                steps: [
+                    `Open ${weekLabel} in the module panel so we work from the exact week instructions.`,
+                    "Extract three core items: the key concept, one structural distinction, and one unresolved pressure point.",
+                    assignmentRequested
+                        ? "Draft your assignment in two parts: concept explanation first, structural distinction second."
+                        : "Tell me whether you want reading support, assignment planning, or concept clarification first.",
+                    "Run a final precision check: use course terms exactly and avoid evaluation language."
+                ],
+                gentleDetail: "A small detail that protects your grade: do not mix arguments across weeks unless your prompt explicitly asks for comparison.",
+                closing: assignmentRequested
+                    ? "Share your draft paragraph and I will help tighten it line by line."
+                    : "If you share your exact question for this week, we can solve it step by step together."
+            });
+        }
+
+        function buildPhilosophyContextReply(question) {
+            const container = document.getElementById('philosophy-content');
+            if (!container) {
+                return null;
+            }
+
+            const titleEl = container.querySelector('h3');
+            const weekTitle = titleEl ? titleEl.textContent.trim() : 'this week';
+            const contextText = String(container.innerText || '').replace(/\s+/g, ' ').trim();
+            if (!contextText) {
+                return null;
+            }
+
+            const q = String(question || '').toLowerCase();
+            const stop = new Set(['this', 'that', 'with', 'from', 'have', 'what', 'when', 'where', 'which', 'about', 'your', 'will', 'would', 'could', 'should', 'there', 'their', 'them', 'then', 'into', 'also', 'because', 'just', 'than']);
+            const keywords = (q.match(/[a-z]{4,}/g) || []).filter(word => !stop.has(word));
+
+            const rawSentences = contextText.split(/[.!?]\s+/).map(s => s.trim()).filter(s => s.length > 24);
+            const scored = rawSentences.map(sentence => {
+                const lower = sentence.toLowerCase();
+                let score = 0;
+                for (const key of keywords) {
+                    if (lower.includes(key)) {
+                        score += 2;
+                    }
+                }
+                if (/assignment|brief|memo|analysis|discussion|capstone|required|extract|focus|check/i.test(sentence)) {
+                    score += 1;
+                }
+                return { sentence, score };
+            });
+
+            const highlights = scored
+                .sort((a, b) => b.score - a.score)
+                .slice(0, 3)
+                .map(item => item.sentence.length > 180 ? item.sentence.slice(0, 177) + '...' : item.sentence);
+
+            if (highlights.length === 0) {
+                return null;
+            }
+
+            const assignmentAsked = /assignment|brief|memo|analysis|discussion|capstone|submit|due|write|prompt|rubric/.test(q);
+            const steps = assignmentAsked
+                ? [
+                    `Open ${weekTitle} and pull one concept plus one distinction before drafting.`,
+                    `Build your response directly from this focus: ${highlights[0]}`,
+                    `Use this second anchor for accuracy: ${highlights[1] || highlights[0]}`,
+                    `Finish with a precision check using this reminder: ${highlights[2] || highlights[0]}`
+                ]
+                : [
+                    `Anchor your answer in ${weekTitle} instead of mixing weeks.`,
+                    `Key idea to use first: ${highlights[0]}`,
+                    `Then connect this supporting idea: ${highlights[1] || highlights[0]}`,
+                    `Close with this clarity checkpoint: ${highlights[2] || highlights[0]}`
+                ];
+
+            return formatGroundedResponse({
+                appreciation: `I appreciate the care you are bringing to ${weekTitle}. That focus supports accurate work.`,
+                practicalContext: 'In practical coursework terms, we can answer from the active module so your wording stays aligned with the assigned framework and tone.',
+                moodHint: q,
+                steps,
+                gentleDetail: 'A detail that protects your score: keep concept definitions and structural distinctions separate so your response stays philosophically precise.',
+                closing: assignmentAsked
+                    ? 'If you share your draft paragraph, I can help tighten wording while preserving your voice.'
+                    : 'If you share the exact question text, I can refine this into a direct final answer with the same tone.'
+            });
+        }
+
+        function buildPhilosophyReply(question) {
+            const q = question.toLowerCase();
+
+            if (q.includes('teleological') || q.includes('design argument') || q.includes('fine-tuning') || q.includes('fine tuning')) {
+                return formatGroundedResponse({
+                    appreciation: "I appreciate how carefully you are approaching the design debate. That kind of precision matters here.",
+                    practicalContext: "In practical coursework terms, teleological arguments are about what kind of explanation design provides, especially once science is part of the discussion.",
+                    moodHint: q,
+                    steps: [
+                        "Identify what the argument is pointing to: order, purpose, fine-tuning, or apparent design.",
+                        "Ask whether the argument relies mainly on probability, necessity, or explanatory power.",
+                        "Separate scientific explanation from philosophical explanation rather than treating them as rivals by default.",
+                        "State one reason philosophers disagree, such as confusion between probability and explanation or disagreement about inference limits."
+                    ],
+                    gentleDetail: "A small but important detail: scientific explanation does not automatically eliminate philosophical questions about why the universe seems purposive or fine-tuned.",
+                    closing: "If you want, we can reconstruct the argument structure for Argument Analysis #2 together."
+                });
+            }
+
+            if (q.includes('atheism') || q.includes('agnostic') || q.includes('nonbelief') || q.includes('agnosticism')) {
+                return formatGroundedResponse({
+                    appreciation: "I appreciate how much care you are taking with nonbelief categories. This week depends on conceptual precision.",
+                    practicalContext: "In practical coursework terms, this topic helps us avoid false binaries and explain why atheism and agnosticism are not interchangeable.",
+                    moodHint: q,
+                    steps: [
+                        "Identify one definition of atheism: in philosophy, it is often the claim that God does not exist, not merely the lack of belief.",
+                        "Identify one definition of agnosticism: often suspension of judgment or the epistemic position that neither theism nor atheism is known.",
+                        "Mark the pressure point: belief claims and knowledge claims are not the same thing.",
+                        "Explain why that distinction matters for religious disagreement and critiques of belief."
+                    ],
+                    gentleDetail: "To ensure accuracy, do not collapse 'lack of belief' into the stronger philosophical denial that God exists.",
+                    closing: "If you share your Concept Extraction Brief #4 idea, we can tighten the concept and distinction together."
+                });
+            }
+
+            if (q.includes('evil') || q.includes('logical problem of evil') || q.includes('evidential problem of evil')) {
+                return formatGroundedResponse({
+                    appreciation: "You are asking exactly the right kind of question here, and I appreciate your willingness to stay with a difficult challenge structurally.",
+                    practicalContext: "In practical coursework terms, this week is about distinguishing kinds of pressure on theism rather than reacting emotionally to suffering.",
+                    moodHint: q,
+                    steps: [
+                        "Start with the traditional conception of God: all-powerful, all-knowing, and perfectly good.",
+                        "State the tension: evil exists, and that appears to conflict with those attributes.",
+                        "Separate the logical problem from the evidential problem: contradiction versus plausibility.",
+                        "Explain why different standards of success keep the debate unresolved."
+                    ],
+                    gentleDetail: "One detail to protect your analysis: the evidential version does not claim strict contradiction; it claims that evil makes God's existence less likely or less plausible.",
+                    closing: "If you would like, we can outline Argument Structure Analysis #3 or the discussion pressure question together."
+                });
+            }
+
+            if (q.includes('religious experience') || q.includes('experience as evidence') || q.includes('william james') || q.includes('mystical')) {
+                return formatGroundedResponse({
+                    appreciation: "I appreciate how thoughtfully you are separating sincerity from justification. That distinction is central this week.",
+                    practicalContext: "In practical coursework terms, religious experience matters because philosophers ask what epistemic weight an experience can carry, not just whether it feels powerful.",
+                    moodHint: q,
+                    steps: [
+                        "Identify one reason experience might count as evidence, such as seeming to present an objective religious reality.",
+                        "Identify one reason it might not count automatically, such as ambiguity, interpretation, or alternative explanations.",
+                        "State one condition often required before experience carries epistemic weight, such as reliability or acceptable standards of evidence.",
+                        "Explain why disagreement persists because standards of justification differ."
+                    ],
+                    gentleDetail: "A quiet but important detail: a powerful experience is not the same thing as a justified belief about what caused it.",
+                    closing: "If you want, we can build your Philosophical Tension Memo #1 around one precise tension in this debate."
+                });
+            }
+
+            if (q.includes('miracle') || q.includes('hume') || q.includes('testimony') || q.includes('probability')) {
+                return formatGroundedResponse({
+                    appreciation: "I appreciate the care you are bringing to standards of evidence. That is exactly the right method for miracles.",
+                    practicalContext: "In practical coursework terms, miracle debates are usually about testimony and probability, not merely whether something unusual could happen.",
+                    moodHint: q,
+                    steps: [
+                        "Identify Hume's pressure point: testimony must overcome the prior improbability of a miracle claim.",
+                        "State the role of testimony: most miracle claims reach us through reports, not direct observation.",
+                        "Explain how probability affects evaluation: the more extraordinary the claim, the stronger the evidence required.",
+                        "Keep possibility separate from justification: a claim may be possible without being well-supported."
+                    ],
+                    gentleDetail: "To keep your analysis strong, focus on evidence standards rather than debating whether miracles are emotionally compelling or impossible in principle.",
+                    closing: "If you want, we can map out Argument Structure Analysis #4 with one clear pressure point from SEP."
+                });
+            }
+
+            if (q.includes('revelation') || q.includes('divine command') || q.includes('morality') || q.includes('feminist') || q.includes('problem of god') || q.includes('patriarchy')) {
+                return formatGroundedResponse({
+                    appreciation: "I appreciate you noticing these related debates, because they add important philosophical pressure to the course.",
+                    practicalContext: "In practical coursework terms, revelation, morality, and feminist critiques all test how religious claims are justified and how concepts of God are framed.",
+                    moodHint: q,
+                    steps: [
+                        "For revelation, ask what epistemic problems arise when knowledge is said to come from divine disclosure.",
+                        "For divine command theory, ask whether morality depends on God's commands and what that means for the religion-morality relationship.",
+                        "For feminist philosophy of religion, identify how patriarchal concepts of God and androcentric traditions shape the field.",
+                        "State the pressure clearly: these debates question assumptions, authority, and the standards used to defend religious claims."
+                    ],
+                    gentleDetail: "A small detail that matters here: feminist critique is not just about adding voices; it also challenges core symbols, conceptual structures, and power relations in philosophy of religion.",
+                    closing: "If you tell me which of these related debates you are working on, we can narrow it to the exact concept or pressure point you need."
+                });
+            }
+
+            const dynamicWeekReply = buildWeekSpecificPhilosophyReply(question, q);
+            if (dynamicWeekReply) {
+                return dynamicWeekReply;
+            }
+
+            const contextualReply = buildPhilosophyContextReply(question);
+            if (contextualReply) {
+                return contextualReply;
+            }
+            
+            if (q.includes('concept extraction') || q.includes('brief')) {
+                return formatGroundedResponse({
+                    appreciation: "I really appreciate how seriously you are taking the brief instructions. That care will help your work stand out.",
+                    practicalContext: "In practice, a strong concept brief shows that you can explain ideas clearly, not just repeat wording.",
+                    moodHint: q,
+                    steps: [
+                        "Part A: choose one core concept from the IEP reading.",
+                        "Define it in your own words in 2-3 clear sentences.",
+                        "Explain why that concept matters in the argument.",
+                        "Part B: pick one distinction from the SEP companion and show what confusion it prevents."
+                    ],
+                    gentleDetail: "To ensure success, avoid broad summaries. Stay focused on one concept and one distinction.",
+                    closing: "If you share your draft, we can review it together in a calm one-on-one way."
+                });
+            }
+            if (q.includes('faith')) {
+                return formatGroundedResponse({
+                    appreciation: "That is an excellent question, and I appreciate your thoughtful approach to a sensitive topic.",
+                    practicalContext: "This distinction matters in real assignments because your interpretation changes the argument you can make.",
+                    moodHint: q,
+                    steps: [
+                        "Model 1: faith as belief tied to claims and evidence.",
+                        "Model 2: faith as trust or commitment in relationship.",
+                        "Identify which model the author is using.",
+                        "Evaluate the argument based on that model, not a mixed definition."
+                    ],
+                    gentleDetail: "A small detail for accuracy: do not switch definitions mid-paragraph, or your analysis can become inconsistent.",
+                    closing: "We can map one reading paragraph together if you want a practical example."
+                });
+            }
+            if (q.includes('religious language')) {
+                return formatGroundedResponse({
+                    appreciation: "I appreciate you raising this, because language analysis is where many students make their biggest progress.",
+                    practicalContext: "In practical terms, how language is used determines what can be proven or challenged in debate.",
+                    moodHint: q,
+                    steps: [
+                        "Check literal reading: statement treated as factual and testable.",
+                        "Check analogical reading: language points beyond ordinary meaning.",
+                        "Match the debate method to the language model.",
+                        "State what kind of conclusion is valid under that model."
+                    ],
+                    gentleDetail: "One detail to protect your grade: name the model before evaluating the argument.",
+                    closing: "If you want, we can build a short response template you can reuse for discussion posts."
+                });
+            }
+            return formatGroundedResponse({
+                appreciation: "Thank you for reaching out. Your commitment to learning is clear, and that effort matters.",
+                practicalContext: "We will keep this practical and focused on what helps you complete your coursework effectively across the newer weeks on design arguments, nonbelief, evil, experience, and miracles.",
+                moodHint: q,
+                steps: [
+                    "Tell me your week or assignment.",
+                    "Share the exact part that feels unclear.",
+                    "We will create a concrete step-by-step plan and complete the next step together."
+                ],
+                gentleDetail: "If a detail is missing, I will point it out gently so we can strengthen your final submission.",
+                closing: "You are not doing this alone. We can handle it one step at a time in this one-on-one space."
+            });
+        }
+
+        function buildDirectDraftPhilosophyReply(question) {
+            const q = String(question || '').toLowerCase();
+            const container = document.getElementById('philosophy-content');
+            const titleEl = container ? container.querySelector('h3') : null;
+            const activeTitle = titleEl ? titleEl.textContent.trim() : '';
+
+            const requestedWeek = extractRequestedWeekKey(question);
+            const requestedWeekLabel = requestedWeek ? getPhilosophyWeekLabel(requestedWeek) : null;
+            const weekLabel = requestedWeekLabel || activeTitle || 'Current Philosophy Week';
+
+            const contextText = container ? String(container.innerText || '').replace(/\s+/g, ' ').trim() : '';
+            const stop = new Set(['this', 'that', 'with', 'from', 'have', 'what', 'when', 'where', 'which', 'about', 'your', 'will', 'would', 'could', 'should', 'there', 'their', 'them', 'then', 'into', 'also', 'because', 'just', 'than']);
+            const keywords = (q.match(/[a-z]{4,}/g) || []).filter(word => !stop.has(word));
+            const rawSentences = contextText
+                ? contextText.split(/[.!?]\s+/).map(s => s.trim()).filter(s => s.length > 24)
+                : [];
+
+            const highlights = rawSentences
+                .map(sentence => {
+                    const lower = sentence.toLowerCase();
+                    let score = 0;
+                    for (const key of keywords) {
+                        if (lower.includes(key)) {
+                            score += 2;
+                        }
+                    }
+                    if (/assignment|brief|memo|analysis|discussion|capstone|required|extract|focus|check/i.test(sentence)) {
+                        score += 1;
+                    }
+                    return { sentence, score };
+                })
+                .sort((a, b) => b.score - a.score)
+                .slice(0, 3)
+                .map(item => item.sentence.length > 180 ? item.sentence.slice(0, 177) + '...' : item.sentence);
+
+            const assignmentAsked = /assignment|brief|memo|analysis|discussion|capstone|submit|due|write|prompt|rubric/.test(q);
+
+            if (highlights.length > 0) {
+                return `${weekLabel} - Direct Draft\n\n` +
+                    `Core claim: ${highlights[0]}\n\n` +
+                    `Support: ${highlights[1] || highlights[0]}\n\n` +
+                    `Precision check: ${highlights[2] || highlights[0]}\n\n` +
+                    (assignmentAsked
+                        ? `Draft structure:\n1. Define the assigned concept in your own words.\n2. Explain one required distinction and what confusion it prevents.\n3. Close by linking the distinction to the week's central pressure point.`
+                        : `Answer pattern:\n1. State your claim in one sentence.\n2. Add one supporting distinction from the week.\n3. End with one implication for the course debate.`);
+            }
+
+            return `Direct Draft\n\n` +
+                `Use this structure:\n` +
+                `1. Define the concept in one clear sentence.\n` +
+                `2. Add one distinction from the assigned week.\n` +
+                `3. Explain what philosophical confusion that distinction prevents.\n` +
+                `4. Keep the response analytical, not evaluative.`;
+        }
+
+        function askPhilosophy() {
+            const input = document.getElementById('philosophy-question');
+            const text = input.value.trim();
+            if (!text) return;
+
+            addChatMessage('philosophy', 'user', text);
+            const mode = getPhilosophyAnswerMode();
+            const reply = mode === 'direct'
+                ? buildDirectDraftPhilosophyReply(text)
+                : buildPhilosophyReply(text);
+            addChatMessage('philosophy', 'ai', reply);
+            
+            input.value = '';
+        }
+
+        // Chat management
+        function addChatMessage(subject, role, text) {
+            const messages = subject === 'chemistry' ? chemistryChatMessages : philosophyChatMessages;
+            const storageKey = subject === 'chemistry' ? CHEMISTRY_CHAT_KEY : PHILOSOPHY_CHAT_KEY;
+            
+            messages.push({ role, text: sanitizePersonaText(text) });
+            localStorage.setItem(storageKey, JSON.stringify(messages));
+            renderChat(subject);
+        }
+
+        function renderChat(subject) {
+            const messages = subject === 'chemistry' ? chemistryChatMessages : philosophyChatMessages;
+            const historyId = subject === 'chemistry' ? 'chemistry-chat-history' : 'philosophy-chat-history';
+            const history = document.getElementById(historyId);
+            
+            history.innerHTML = messages.map(msg => `
+                <div class="chat-message ${msg.role}">${msg.text}</div>
+            `).join('');
+            
+            history.scrollTop = history.scrollHeight;
+        }
+
+        function clearChemistryChat() {
+            chemistryChatMessages = [];
+            localStorage.setItem(CHEMISTRY_CHAT_KEY, JSON.stringify([]));
+            renderChat('chemistry');
+        }
+
+        function clearPhilosophyChat() {
+            philosophyChatMessages = [];
+            localStorage.setItem(PHILOSOPHY_CHAT_KEY, JSON.stringify([]));
+            renderChat('philosophy');
+        }
+
+        // Initialize on load
+        window.addEventListener('load', () => {
+            // Load chat histories
+            const chemStored = localStorage.getItem(CHEMISTRY_CHAT_KEY);
+            chemistryChatMessages = sanitizeChatHistory(chemStored ? JSON.parse(chemStored) : []);
+            
+            const philStored = localStorage.getItem(PHILOSOPHY_CHAT_KEY);
+            philosophyChatMessages = sanitizeChatHistory(philStored ? JSON.parse(philStored) : []);
+
+            const modePicker = document.getElementById('philosophy-answer-mode');
+            if (modePicker) {
+                modePicker.value = getPhilosophyAnswerMode();
+            }
+
+            if (chemistryChatMessages.length === 0) {
+                chemistryChatMessages.push({
+                    role: 'ai',
+                    text: "I noticed your commitment in showing up today, and I appreciate that dedication. I am Ms. Maya Alvarado Lopez, your Grounded Mentor. In this one-on-one space, we will use calm, tried-and-true steps to build a solid foundation in chemistry together."
+                });
+            }
+
+            if (philosophyChatMessages.length === 0) {
+                philosophyChatMessages.push({
+                    role: 'ai',
+                    text: "I noticed the effort you are bringing, and I appreciate it. I am Ms. Maya Alvarado Lopez, your Grounded Mentor. Let us approach philosophy with steady structure, practical clarity, and one careful step at a time so we build strong work together."
+                });
+            }
+            
+            // Restore selected subject
+            const lastSubject = localStorage.getItem(SELECTED_SUBJECT_KEY) || 'chemistry';
+            if (lastSubject === 'philosophy') {
+                const btn = document.querySelector('.subject-btn[data-subject="philosophy"]');
+                if (btn) {
+                    switchSubject('philosophy', btn);
+                }
+            }
+            
+            // Render chats
+            renderChat('chemistry');
+            renderChat('philosophy');
+            localStorage.setItem(CHEMISTRY_CHAT_KEY, JSON.stringify(chemistryChatMessages));
+            localStorage.setItem(PHILOSOPHY_CHAT_KEY, JSON.stringify(philosophyChatMessages));
+        });
+
+        // Keyboard support
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                const chemInput = document.getElementById('chemistry-question');
+                const philInput = document.getElementById('philosophy-question');
+                
+                if (document.activeElement === chemInput) {
+                    e.preventDefault();
+                    askChemistry();
+                } else if (document.activeElement === philInput) {
+                    e.preventDefault();
+                    askPhilosophy();
+                }
+            }
+        });
+    </script>
+    <script>
+        (function detectAiMode() {
+            const banner = document.getElementById('ai-mode-banner');
+            const badge  = document.getElementById('ai-mode-badge');
+            const text   = document.getElementById('ai-mode-text');
+
+            function setMode(type, label, detail) {
+                const colors = {
+                    browser: { bg: '#fff3e0', border: '1px solid #ffb74d', color: '#7c4700', badgeBg: '#ffb74d', badgeColor: '#fff' },
+                    ollama:  { bg: '#e8f5e9', border: '1px solid #66bb6a', color: '#1b5e20', badgeBg: '#43a047', badgeColor: '#fff' }
+                };
+                const c = colors[type] || colors.browser;
+                banner.style.background   = c.bg;
+                banner.style.border       = c.border;
+                banner.style.color        = c.color;
+                badge.style.background    = c.badgeBg;
+                badge.style.color         = c.badgeColor;
+                badge.textContent         = label;
+                text.textContent          = detail;
+            }
+
+            const isProxyServed = window.location.protocol.startsWith('http') &&
+                                  window.location.hostname !== '';
+            if (!isProxyServed) {
+                setMode('browser',
+                    'Free Browser Mode',
+                    'Built-in responses active. Open via start_local_ai.cmd for strongest AI (still free).');
+                return;
+            }
+
+            fetch('/api/health', { cache: 'no-store' })
+                .then(r => r.json())
+                .then(data => {
+                    const ollama = data && data.providers && data.providers.ollama;
+                    if (ollama && ollama.configured) {
+                        setMode('ollama',
+                            '✅ Free Local Ollama Mode',
+                            '✅ Free Local Ollama Mode');
+                    } else {
+                        setMode('browser',
+                            'Free Browser Mode',
+                            'Built-in responses active. Run start_local_ai.cmd and reload for stronger AI answers.');
+                    }
+                })
+                .catch(() => {
+                    setMode('browser',
+                        'Free Browser Mode',
+                        'Proxy not reachable. Chat uses built-in browser responses only.');
+                });
+        })();
+    </script></body>
+</html>

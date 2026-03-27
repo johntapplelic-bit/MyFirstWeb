@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My First Web Page</title>
+    <style>
+        #ai-mode-banner {
+            font-family: "Segoe UI", Tahoma, sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 16px;
+            border-radius: 10px;
+            margin: 14px 0;
+            font-size: 0.92rem;
+            font-weight: 600;
+            max-width: 680px;
+        }
+        #ai-mode-banner.mode-browser  { background: #fff3e0; border: 1px solid #ffb74d; color: #7c4700; }
+        #ai-mode-banner.mode-ollama   { background: #e8f5e9; border: 1px solid #66bb6a; color: #1b5e20; }
+        #ai-mode-banner.mode-checking { background: #f5f5f5; border: 1px dashed #bbb;    color: #555; }
+        #ai-mode-banner .badge {
+            padding: 3px 9px;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        #ai-mode-banner.mode-browser .badge  { background: #ffb74d; color: #fff; }
+        #ai-mode-banner.mode-ollama .badge   { background: #43a047; color: #fff; }
+        #ai-mode-banner.mode-checking .badge { background: #ccc;    color: #555; }
+    </style>
+</head>
+<body>
+    <div id="ai-mode-banner" class="mode-checking">
+        <span class="badge">Checking…</span>
+        <span id="ai-mode-text">Detecting AI mode…</span>
+    </div>
+
+    <h1>My setup is finally ready!</h1>
+    <p>HTML, JavaScript, and Python are all set up on my PC.</p>
+    <h2>📚 Learning Portal</h2>
+    <p><a href="subjects.html"><strong>🎓 Combined Learning Hub (Chemistry + Philosophy)</strong></a> - Switch between subjects on one page</p>
+    
+    <h2>Individual Courses</h2>
+    <p><a href="chemistry.html">🧪 Chemistry Fundamentals (Full Version)</a></p>
+    <p><a href="philosophy_religion.html">📚 Philosophy of Religion (Full Version)</a></p>
+    <button idnumber="101" id="myButton">Click Me</button>
+    <script>
+        // 1. Define the function that handles the ID
+        function updateSelectedItem(id) {
+            console.log("The selected ID is now: " + id);
+            alert("You selected item #" + id);
+        }
+
+        // 2. Select the button and tell it to run your code when clicked
+        const btn = document.querySelector("#myButton");
+
+        btn.addEventListener("click", (e) => {
+            const id = e.target.getAttribute("idnumber");
+            updateSelectedItem(id);
+        });
+    </script>
+
+    <script>
+        (function detectAiMode() {
+            const banner    = document.getElementById('ai-mode-banner');
+            const modeText  = document.getElementById('ai-mode-text');
+
+            function setMode(type, label, detail) {
+                banner.className = 'mode-' + type;
+                banner.querySelector('.badge').textContent = label;
+                modeText.textContent = detail;
+            }
+
+            // Only meaningful when served via Flask proxy (has an HTTP origin)
+            const isProxyServed = window.location.protocol.startsWith('http') &&
+                                  window.location.hostname !== '';
+            if (!isProxyServed) {
+                setMode('browser',
+                    'Free Browser Mode',
+                    'Built-in responses active. Open via start_local_ai.cmd for strongest AI results (still free).');
+                return;
+            }
+
+            fetch('/api/health', { cache: 'no-store' })
+                .then(r => r.json())
+                .then(data => {
+                    const ollama = data && data.providers && data.providers.ollama;
+                    if (ollama && ollama.configured) {
+                        setMode('ollama',
+                            '✅ Free Local Ollama Mode',
+                            '✅ Free Local Ollama Mode');
+                    } else {
+                        setMode('browser',
+                            'Free Browser Mode',
+                            'Built-in responses active. To unlock stronger AI: run start_local_ai.cmd and reload.');
+                    }
+                })
+                .catch(() => {
+                    setMode('browser',
+                        'Free Browser Mode',
+                        'Proxy server not reachable. Chat uses built-in browser responses only.');
+                });
+        })();
+    </script>
+</body>
+</html>

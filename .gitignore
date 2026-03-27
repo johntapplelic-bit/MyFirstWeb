@@ -1,0 +1,8 @@
+.env
+.venv/
+__pycache__/
+.vscode/
+*.pyc
+*.pyo
+*.pyd
+verification_results.db

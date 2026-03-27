@@ -1,0 +1,386 @@
+[
+    {
+        "chunk": "PURPOSE OF THIS DOCUMENT\n---------------------------\nThis document serves as the foundational root input for an AI builder pipeline",
+        "source": "CrossRef",
+        "title": "Enhancing Credit Decisions with AI: A Pipeline for Automated Financial Document Analysis and Creditworthiness Prediction",
+        "year": 2025,
+        "url": "https://doi.org/10.36227/techrxiv.174195749.90696308/v1",
+        "similarity": 0.254
+    },
+    {
+        "chunk": "PURPOSE OF THIS DOCUMENT\n---------------------------\nThis document serves as the foundational root input for an AI builder pipeline",
+        "source": "CrossRef",
+        "title": "Enhancing Credit Decisions with AI: A Pipeline for Automated Financial Document Analysis and Creditworthiness Prediction",
+        "year": 2025,
+        "url": "https://doi.org/10.36227/techrxiv.174195749.90696308/v2",
+        "similarity": 0.254
+    },
+    {
+        "chunk": "It is intentionally structured, neutral, and academically styled to support\ntext extraction, chunking, semantic verification, and similarity scoring systems",
+        "source": "CrossRef",
+        "title": "A Semantic Text Similarity-Based Ensemble Framework for Automated Essay Scoring",
+        "year": 2025,
+        "url": "https://doi.org/10.5220/0014154000004932",
+        "similarity": 0.28
+    },
+    {
+        "chunk": "It is intentionally structured, neutral, and academically styled to support\ntext extraction, chunking, semantic verification, and similarity scoring systems",
+        "source": "CrossRef",
+        "title": "TECS: A Web Text Extraction Tool Based on Semantic Similarity Calculation",
+        "year": 2011,
+        "url": "https://doi.org/10.1109/icinis.2011.55",
+        "similarity": 0.435
+    },
+    {
+        "chunk": "It is intentionally structured, neutral, and academically styled to support\ntext extraction, chunking, semantic verification, and similarity scoring systems",
+        "source": "CrossRef",
+        "title": "Exploring Text Similarity Metric for Essay Scoring Using Latent Semantic Analysis (LSA)",
+        "year": 2025,
+        "url": "https://doi.org/10.1109/isriti68345.2025.11393255",
+        "similarity": 0.254
+    },
+    {
+        "chunk": "It is intentionally structured, neutral, and academically styled to support\ntext extraction, chunking, semantic verification, and similarity scoring systems",
+        "source": "CrossRef",
+        "title": "Tree-Structured Curriculum Learning Based on Semantic Similarity of Text",
+        "year": 2017,
+        "url": "https://doi.org/10.1109/icmla.2017.00-27",
+        "similarity": 0.437
+    },
+    {
+        "chunk": "It is intentionally structured, neutral, and academically styled to support\ntext extraction, chunking, semantic verification, and similarity scoring systems",
+        "source": "CrossRef",
+        "title": "Semantic Chunking and Consensus Filtering for Structured Extraction of Cyber Threat Intelligence",
+        "year": 2026,
+        "url": "https://doi.org/10.1109/icaic67076.2026.11395811",
+        "similarity": 0.292
+    },
+    {
+        "chunk": "The content is designed to be general enough to avoid copyright issues, yet rich\nenough to trigger meaningful academic search matches through metadata, abstracts,\nand conceptual overlaps",
+        "source": "CrossRef",
+        "title": "Is Good Enough, Really Good Enough? Does algorithmic metadata search replace the need for discipline-oriented databases?",
+        "year": 2012,
+        "url": "https://doi.org/10.5703/1288284314744",
+        "similarity": 0.293
+    },
+    {
+        "chunk": "The content is designed to be general enough to avoid copyright issues, yet rich\nenough to trigger meaningful academic search matches through metadata, abstracts,\nand conceptual overlaps",
+        "source": "CrossRef",
+        "title": "In Search of Zora/When Metadata Isn\u2019t Enough: Rescuing the Experiences of Black Women Through Statistical Modeling",
+        "year": 2019,
+        "url": "https://doi.org/10.1080/19386389.2019.1652967",
+        "similarity": 0.252
+    },
+    {
+        "chunk": "1 Systems and Structure\nA system is a collection of components that interact to achieve a specific\nfunction",
+        "source": "CrossRef",
+        "title": "Car braking-system components",
+        "year": 2014,
+        "url": "https://doi.org/10.1007/978-3-658-03978-3_4",
+        "similarity": 0.277
+    },
+    {
+        "chunk": "1 Systems and Structure\nA system is a collection of components that interact to achieve a specific\nfunction",
+        "source": "CrossRef",
+        "title": "Introduction: SO MANY POSSIBILITIES: HOW TO CHOOSE A SYSTEM TO ACHIEVE YOUR SPECIFIC GOAL",
+        "year": 1999,
+        "url": "https://doi.org/10.1016/b978-012253840-7/50001-8",
+        "similarity": 0.376
+    },
+    {
+        "chunk": "The structure of a system determines how information flows, how\nprocesses are executed, and how outcomes are produced",
+        "source": "CrossRef",
+        "title": "How Chemical Structure Determines Physical, Chemical, and Technological Properties: An Overview Illustrating the Potential of Quantitative Structure-Property Relationships for Fuels Science",
+        "year": null,
+        "url": "https://doi.org/10.1021/ef040033q.s001",
+        "similarity": 0.332
+    },
+    {
+        "chunk": "The structure of a system determines how information flows, how\nprocesses are executed, and how outcomes are produced",
+        "source": "CrossRef",
+        "title": "UNDERSTAND HOW INFORMATION FLOWS",
+        "year": 2022,
+        "url": "https://doi.org/10.2307/j.ctv2pwtnwn.10",
+        "similarity": 0.373
+    },
+    {
+        "chunk": "The structure of a system determines how information flows, how\nprocesses are executed, and how outcomes are produced",
+        "source": "CrossRef",
+        "title": "How the Brain Processes Information",
+        "year": 2022,
+        "url": "https://doi.org/10.4135/9781071855324.n3",
+        "similarity": 0.301
+    },
+    {
+        "chunk": "The structure of a system determines how information flows, how\nprocesses are executed, and how outcomes are produced",
+        "source": "CrossRef",
+        "title": "Butterfly Molecules: How Cross-Stacking Determines Bulk Physical Properties",
+        "year": null,
+        "url": "https://doi.org/10.1021/acs.jpcc.8b02625.s001",
+        "similarity": 0.28
+    },
+    {
+        "chunk": "2 Information Integrity\nInformation integrity refers to the accuracy, consistency, and reliability of\ndata as it moves through a pipeline",
+        "source": "CrossRef",
+        "title": "Asset Integrity Management and Other Concepts of Asset Reliability",
+        "year": 2017,
+        "url": "https://doi.org/10.1016/b978-0-12-813045-2.00018-1",
+        "similarity": 0.402
+    },
+    {
+        "chunk": "Verification processes ensure that extracted\ntext aligns with known academic concepts, metadata, or abstract-level\ndescriptions",
+        "source": "CrossRef",
+        "title": "Metadata Dictionary Registry of Metadata Element Descriptions",
+        "year": null,
+        "url": "https://doi.org/10.5594/smpte.rp210.10.2007",
+        "similarity": 0.413
+    },
+    {
+        "chunk": "Verification processes ensure that extracted\ntext aligns with known academic concepts, metadata, or abstract-level\ndescriptions",
+        "source": "CrossRef",
+        "title": "Metadata Competencies for Entry-Level Positions: What Employers Expect as Reflected in Position Descriptions, 2000\u20132013",
+        "year": 2015,
+        "url": "https://doi.org/10.1080/19386389.2015.1050317",
+        "similarity": 0.259
+    },
+    {
+        "chunk": "3 Semantic Verification\nSemantic verification is the process of comparing extracted text to external\nknowledge sources",
+        "source": "CrossRef",
+        "title": "Learning short-text semantic similarity with word embeddings and external knowledge sources",
+        "year": 2019,
+        "url": "https://doi.org/10.1016/j.knosys.2019.07.013",
+        "similarity": 0.438
+    },
+    {
+        "chunk": "3 Semantic Verification\nSemantic verification is the process of comparing extracted text to external\nknowledge sources",
+        "source": "CrossRef",
+        "title": "Integration and verification of semantic constraints in adaptive process management systems",
+        "year": 2008,
+        "url": "https://doi.org/10.1016/j.datak.2007.06.007",
+        "similarity": 0.41
+    },
+    {
+        "chunk": "3 Semantic Verification\nSemantic verification is the process of comparing extracted text to external\nknowledge sources",
+        "source": "CrossRef",
+        "title": "SEMANTIC PROCESS MINING FOR THE VERIFICATION OF MEDICAL RECOMMENDATIONS",
+        "year": 2011,
+        "url": "https://doi.org/10.5220/0003112600050016",
+        "similarity": 0.389
+    },
+    {
+        "chunk": "This comparison does not require access to full copyrighted\nworks; instead, it relies on metadata, abstracts, and publicly available\ndescriptions",
+        "source": "CrossRef",
+        "title": "Table S1: Metadata associated with publicly available metagenomic samples",
+        "year": null,
+        "url": "https://doi.org/10.7717/peerj.14924/supp-3",
+        "similarity": 0.365
+    },
+    {
+        "chunk": "This comparison does not require access to full copyrighted\nworks; instead, it relies on metadata, abstracts, and publicly available\ndescriptions",
+        "source": "CrossRef",
+        "title": "Supplementary file 8. Publicly available mitochondrial dog genomes used in the study.",
+        "year": null,
+        "url": "https://doi.org/10.7554/elife.14552.022",
+        "similarity": 0.268
+    },
+    {
+        "chunk": "This comparison does not require access to full copyrighted\nworks; instead, it relies on metadata, abstracts, and publicly available\ndescriptions",
+        "source": "CrossRef",
+        "title": "When Fair Use Does Not Cover Educational Tests Containing Copyrighted Works",
+        "year": 2025,
+        "url": "https://doi.org/10.1093/grurint/ikaf068",
+        "similarity": 0.371
+    },
+    {
+        "chunk": "This comparison does not require access to full copyrighted\nworks; instead, it relies on metadata, abstracts, and publicly available\ndescriptions",
+        "source": "CrossRef",
+        "title": "Access to and Use fo Publicly Available Information",
+        "year": null,
+        "url": "https://doi.org/10.4018/9781591407898.ch001",
+        "similarity": 0.376
+    },
+    {
+        "chunk": "ROOT-LEVEL DEFINITIONS\n-------------------------\nRoot Layer:\n    The foundational layer of a system that establishes the initial structure,\n    terminology, and conceptual boundaries",
+        "source": "CrossRef",
+        "title": "Fig. 1. Layer-by-layer arrangement of the root system of rice in water regime options (a) and fertilizer application (b), average for 2013-2015.",
+        "year": null,
+        "url": "https://doi.org/10.31857/s2500-26272019541-43-15925",
+        "similarity": 0.312
+    },
+    {
+        "chunk": "Root Concept:\n    A primary idea that supports the development of more complex structures or\n    processes",
+        "source": "CrossRef",
+        "title": "Novel multi-module Bayesian network with cyclic structures for root cause analysis: Application to complex chemical processes",
+        "year": null,
+        "url": "https://doi.org/10.1021/acs.iecr.0c01710.s001",
+        "similarity": 0.328
+    },
+    {
+        "chunk": "Root Concept:\n    A primary idea that supports the development of more complex structures or\n    processes",
+        "source": "CrossRef",
+        "title": "Single Benefits Screening (Promise Testing) and More Complex Concept Testing",
+        "year": 2005,
+        "url": "https://doi.org/10.1002/9780470290132.ch2",
+        "similarity": 0.295
+    },
+    {
+        "chunk": "Root Concept:\n    A primary idea that supports the development of more complex structures or\n    processes",
+        "source": "CrossRef",
+        "title": "Idea and Concept in Schopenhauer: From the Early Manuscripts to the World as Will and Representation",
+        "year": 2016,
+        "url": "https://doi.org/10.4324/9781315638584-18",
+        "similarity": 0.261
+    },
+    {
+        "chunk": "Root Concept:\n    A primary idea that supports the development of more complex structures or\n    processes",
+        "source": "CrossRef",
+        "title": "Multiple-Space Search in a More Complex Discovery Microworld",
+        "year": 2000,
+        "url": "https://doi.org/10.7551/mitpress/2939.003.0010",
+        "similarity": 0.335
+    },
+    {
+        "chunk": "Root Concept:\n    A primary idea that supports the development of more complex structures or\n    processes",
+        "source": "CrossRef",
+        "title": "More Rational Design of Complex Concrete Structures",
+        "year": 1999,
+        "url": "https://doi.org/10.1201/9781482272215-10",
+        "similarity": 0.304
+    },
+    {
+        "chunk": "Root Verification:\n    The process of confirming that foundational text aligns with known academic\n    or conceptual frameworks",
+        "source": "CrossRef",
+        "title": "Foundational Aspects of Family\u2013School Connections: Definitions, Conceptual Frameworks, and Research Needs",
+        "year": 2015,
+        "url": "https://doi.org/10.1007/978-3-319-13838-1_1",
+        "similarity": 0.386
+    },
+    {
+        "chunk": "Root Verification:\n    The process of confirming that foundational text aligns with known academic\n    or conceptual frameworks",
+        "source": "CrossRef",
+        "title": "Foundational Issues and Conceptual Problems",
+        "year": 2000,
+        "url": "https://doi.org/10.7551/mitpress/4928.003.0003",
+        "similarity": 0.386
+    },
+    {
+        "chunk": "Root Verification:\n    The process of confirming that foundational text aligns with known academic\n    or conceptual frameworks",
+        "source": "CrossRef",
+        "title": "Content and Conceptual Frameworks of Preceptor Feedback Related to Residents\u2019 Educational Needs",
+        "year": 2012,
+        "url": "https://doi.org/10.1097/acm.0b013e3182623073",
+        "similarity": 0.287
+    },
+    {
+        "chunk": "APPLICATION IN AI PIPELINES\n------------------------------\nA root document is used to test:\n\n- PDF text extraction accuracy\n- Chunk segmentation logic\n- Academic search integration\n- Similarity scoring thresholds\n- Database logging and reporting\n- Heatmap visualization of confidence scores\n\n6",
+        "source": "CrossRef",
+        "title": "Investigate the use of Anchor-Text and of Query-Document Similarity Scores to Predict the Performance of Search Engine",
+        "year": 2017,
+        "url": "https://doi.org/10.14569/ijacsa.2017.081140",
+        "similarity": 0.252
+    },
+    {
+        "chunk": "SAMPLE PARAGRAPH FOR VERIFICATION TESTING\n--------------------------------------------\nThe study of information systems often emphasizes the relationship between\nstructure and function",
+        "source": "CrossRef",
+        "title": "New computational methods to study the relationship between protein structure and function",
+        "year": null,
+        "url": "https://doi.org/10.31274/td-20240329-537",
+        "similarity": 0.451
+    },
+    {
+        "chunk": "SAMPLE PARAGRAPH FOR VERIFICATION TESTING\n--------------------------------------------\nThe study of information systems often emphasizes the relationship between\nstructure and function",
+        "source": "CrossRef",
+        "title": "Relationship between the Structure of Ionic Liquid and Its Enrichment Ability To Trace Fungicides from an Environmental Water Sample",
+        "year": null,
+        "url": "https://doi.org/10.1021/acs.jafc.8b03244.s001",
+        "similarity": 0.259
+    },
+    {
+        "chunk": "SAMPLE PARAGRAPH FOR VERIFICATION TESTING\n--------------------------------------------\nThe study of information systems often emphasizes the relationship between\nstructure and function",
+        "source": "CrossRef",
+        "title": "Structure-Catalytic Function Relationship of SiO2-Immobilized Mononuclear Cu Complexes: An EPR Study",
+        "year": null,
+        "url": "https://doi.org/10.1021/la700815d.s001",
+        "similarity": 0.253
+    },
+    {
+        "chunk": "SAMPLE PARAGRAPH FOR VERIFICATION TESTING\n--------------------------------------------\nThe study of information systems often emphasizes the relationship between\nstructure and function",
+        "source": "CrossRef",
+        "title": "The Relationship Between Protein Sequence, Structure and Function",
+        "year": null,
+        "url": "https://doi.org/10.1007/0-306-48662-8_2",
+        "similarity": 0.368
+    },
+    {
+        "chunk": "A well-designed system maintains integrity by ensuring\nthat each component contributes to the overall purpose",
+        "source": "CrossRef",
+        "title": "Incorporating Relevance and Pseudo-relevance Feedback in the Markov  Random Field Model",
+        "year": 2008,
+        "url": "https://doi.org/10.6028/nist.sp.500-277.relfdbk-brown_university",
+        "similarity": 0.254
+    },
+    {
+        "chunk": "A well-designed system maintains integrity by ensuring\nthat each component contributes to the overall purpose",
+        "source": "CrossRef",
+        "title": "Ensuring Well-Being in a Postpandemic World: Ensuring our Specialty Maintains its Resilience",
+        "year": 2022,
+        "url": "https://doi.org/10.1016/j.anclin.2022.02.001",
+        "similarity": 0.337
+    },
+    {
+        "chunk": "A well-designed system maintains integrity by ensuring\nthat each component contributes to the overall purpose",
+        "source": "CrossRef",
+        "title": "Bayou Choctaw Well Integrity Grading Component Based on Geomechanical Simulation",
+        "year": 2016,
+        "url": "https://doi.org/10.2172/1431471",
+        "similarity": 0.411
+    },
+    {
+        "chunk": "Academic literature\nfrequently highlights the importance of verification processes, which help\nconfirm that extracted or transformed data remains aligned with established\nknowledge frameworks",
+        "source": "CrossRef",
+        "title": "Motivational processes involved in academic help seeking and help avoidance",
+        "year": 2000,
+        "url": "https://doi.org/10.15760/etd.5569",
+        "similarity": 0.27
+    },
+    {
+        "chunk": "Academic literature\nfrequently highlights the importance of verification processes, which help\nconfirm that extracted or transformed data remains aligned with established\nknowledge frameworks",
+        "source": "CrossRef",
+        "title": "Table 3: Analysis of Variance of aligned-rank transformed data for main effects of bioturbation parameters.",
+        "year": null,
+        "url": "https://doi.org/10.7717/peerj.17047/table-3",
+        "similarity": 0.381
+    },
+    {
+        "chunk": "CONCLUSION\n-------------\nThis root document provides a stable, structured foundation for testing AI\nbuilder pipelines",
+        "source": "CrossRef",
+        "title": "Document Builder",
+        "year": null,
+        "url": "https://doi.org/10.31979/etd.ahs2-7rfe",
+        "similarity": 0.254
+    },
+    {
+        "chunk": "CONCLUSION\n-------------\nThis root document provides a stable, structured foundation for testing AI\nbuilder pipelines",
+        "source": "CrossRef",
+        "title": "AI - Augmented Automated Testing in AWS CI/CD Pipelines: A Machine Learning Approach to Enhancing Software Quality",
+        "year": 2022,
+        "url": "https://doi.org/10.21275/sr24708022018",
+        "similarity": 0.284
+    },
+    {
+        "chunk": "It contains academically styled content, clear sectioning,\nand conceptually rich material suitable for semantic verification without\nrelying on copyrighted text",
+        "source": "CrossRef",
+        "title": "Enhanced Semantic Similarity Learning Framework for Image-Text Matching_supp1-3307554.pdf",
+        "year": null,
+        "url": "https://doi.org/10.1109/tcsvt.2023.3307554/mm1",
+        "similarity": 0.28
+    },
+    {
+        "chunk": "It contains academically styled content, clear sectioning,\nand conceptually rich material suitable for semantic verification without\nrelying on copyrighted text",
+        "source": "CrossRef",
+        "title": "Neural Scene Designer: Self-Styled Semantic Image Manipulation_supp1-3614000.pdf",
+        "year": null,
+        "url": "https://doi.org/10.1109/tip.2025.3614000/mm1",
+        "similarity": 0.266
+    }
+]

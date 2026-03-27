@@ -1,0 +1,2100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Philosophy of Religion: Structured Course</title>
+    <style>
+        :root {
+            --bg-1: #f8f4ff;
+            --bg-2: #f2ebff;
+            --panel: #ffffff;
+            --ink: #1f1f2b;
+            --subtle: #6a6581;
+            --accent: #7a1bb3;
+            --accent-2: #5b1287;
+            --border: #e4d7f5;
+            --bubble-user: #7a1bb3;
+            --bubble-ai: #ece6ff;
+            --good: #2e7d32;
+            --warn: #8e24aa;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--ink);
+            background: radial-gradient(circle at 10% 20%, #ffffff 0%, transparent 30%),
+                        radial-gradient(circle at 90% 10%, #efe1ff 0%, transparent 32%),
+                        linear-gradient(160deg, var(--bg-1), var(--bg-2));
+            min-height: 100vh;
+            padding: 18px;
+        }
+
+        .app {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            gap: 14px;
+        }
+
+        .card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            box-shadow: 0 6px 20px rgba(77, 27, 118, 0.08);
+            padding: 14px;
+        }
+
+        h1 { margin: 4px 0 8px; font-size: clamp(1.3rem, 2.5vw, 2rem); }
+        h2 { margin: 0 0 10px; font-size: 1.05rem; color: var(--accent-2); }
+        h3 { margin: 8px 0 6px; font-size: 0.95rem; color: #5b1287; }
+        h4 { margin: 8px 0 4px; font-size: 0.88rem; color: #6a1b9a; }
+        p { margin: 0 0 8px 0; line-height: 1.5; }
+
+        .subtle { color: var(--subtle); font-size: 0.93rem; }
+
+        label { font-weight: 600; font-size: 0.88rem; display: block; margin-bottom: 6px; color: var(--accent-2); }
+
+        select, textarea, input { font: inherit; }
+        select, textarea { width: 100%; border: 1px solid #d1c0ea; border-radius: 10px; padding: 9px; background: #fff; }
+
+        button {
+            border: none;
+            border-radius: 10px;
+            padding: 9px 14px;
+            cursor: pointer;
+            color: #fff;
+            background: var(--accent);
+            font-weight: 600;
+        }
+
+        button:hover { background: var(--accent-2); }
+
+        .pill {
+            display: inline-block;
+            margin: 4px 0;
+            font-size: 0.76rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            background: #efe2ff;
+            color: #5f2c8f;
+            border-radius: 999px;
+            padding: 4px 8px;
+        }
+
+        /* Module Navigation */
+        .module-nav {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 8px;
+            margin: 12px 0;
+        }
+
+        .module-btn {
+            border: 2px solid #e4d7f5;
+            background: #fcfaff;
+            color: #5b1287;
+            border-radius: 10px;
+            padding: 10px;
+            cursor: pointer;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .module-btn:hover {
+            border-color: var(--accent);
+            background: #f7ecfd;
+        }
+
+        .module-btn.active {
+            border-color: var(--accent);
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .module-content {
+            display: none;
+            background: linear-gradient(180deg, #fcfaff 0%, #f3ecff 100%);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 14px;
+            margin-top: 12px;
+        }
+
+        .module-content.active {
+            display: block;
+        }
+
+        .module-header {
+            background: linear-gradient(135deg, #f3e5f5 0%, #f9f0fc 100%);
+            border-left: 4px solid var(--accent);
+            padding: 12px;
+            margin-bottom: 12px;
+            border-radius: 8px;
+        }
+
+        .learning-section {
+            background: #f7ecfd;
+            border-left: 4px solid var(--accent);
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 8px;
+        }
+
+        .learning-section h4 { margin-top: 0; }
+        .learning-section ul, .learning-section ol { margin: 6px 0; padding-left: 20px; }
+        .learning-section li { margin: 4px 0; line-height: 1.4; font-size: 0.92rem; }
+
+        .assignment {
+            background: #f0e5ff;
+            border: 1px solid #d8c0e2;
+            border-radius: 10px;
+            padding: 12px;
+            margin: 12px 0;
+        }
+
+        .assignment h4 { margin-top: 0; color: #5b1287; }
+
+        .assignment-instruction {
+            background: #fff;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 6px;
+            border-left: 3px solid var(--accent);
+            font-size: 0.88rem;
+            line-height: 1.45;
+        }
+
+        a { color: var(--accent); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        /* Chat */
+        .history {
+            max-height: 450px;
+            overflow-y: auto;
+            padding: 8px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: linear-gradient(180deg, #fcfaff 0%, #f3ecff 100%);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .row {
+            display: flex;
+            width: 100%;
+            align-items: flex-end;
+            gap: 8px;
+        }
+
+        .row.user { justify-content: flex-end; }
+        .row.ai { justify-content: flex-start; }
+
+        .avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 0.72rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .avatar.user { background: #3a79d8; }
+        .avatar.ai { background: var(--accent); }
+
+        .stack { max-width: 80%; }
+
+        .bubble {
+            border-radius: 16px;
+            padding: 10px 12px;
+            line-height: 1.45;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .bubble.user {
+            background: var(--bubble-user);
+            color: #fff;
+            border-bottom-right-radius: 6px;
+        }
+
+        .bubble.ai {
+            background: var(--bubble-ai);
+            color: #23182f;
+            border-bottom-left-radius: 6px;
+        }
+
+        .composer {
+            display: grid;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .status {
+            font-size: 0.84rem;
+            color: var(--warn);
+            min-height: 1.2em;
+        }
+
+        .status.ok { color: var(--good); }
+
+        @media (max-width: 640px) {
+            body { padding: 10px; }
+            .card { padding: 11px; }
+            .stack { max-width: 86%; }
+            .module-nav { grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); }
+        }
+    </style>
+</head>
+<body>
+    <main class="app">
+        <section class="card">
+            <h1>Philosophy of Religion</h1>
+            <p class="subtle">A structured course in philosophical analysis of religious questions. No textbook required—all readings are free IEP and SEP materials.</p>
+            <span class="pill">Free, Open-Access Course</span>
+
+            <h3>Course Goals</h3>
+            <p>This course teaches you how philosophers analyze religious problems using conceptual clarity, argument structure, and attention to unresolved disagreement. It is not about personal belief—it is about method.</p>
+
+            <h3>By the end of this course, you should be able to:</h3>
+            <div class="learning-section">
+                <ul>
+                    <li><strong>SLO 1:</strong> Identify philosophers and their theories</li>
+                    <li><strong>SLO 2:</strong> Understand forms of philosophical discourse</li>
+                    <li><strong>SLO 3:</strong> Understand core philosophical issues (metaphysics, epistemology, ethics, religion)</li>
+                    <li><strong>SLO 4:</strong> Construct philosophical arguments</li>
+                    <li><strong>SLO 5:</strong> Apply philosophical viewpoints to everyday life</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>📚 Course Modules</h2>
+            <p class="subtle">Follow the modules in order. Each contains readings, companion guides, and assignments.</p>
+
+            <div class="module-nav">
+                <button class="module-btn active" data-week="week1" onclick="switchModule('week1', this)">Week 1: What is Philosophy of Religion?</button>
+                <button class="module-btn" data-week="week2" onclick="switchModule('week2', this)">Week 2: Faith, Reason & Authority</button>
+                <button class="module-btn" data-week="week3" onclick="switchModule('week3', this)">Week 3: Religious Language</button>
+                <button class="module-btn" data-week="week4" onclick="switchModule('week4', this)">Week 4: Ontological Arguments</button>
+                <button class="module-btn" data-week="week5" onclick="switchModule('week5', this)">Week 5: Cosmological Arguments</button>
+                <button class="module-btn" data-week="week6" onclick="switchModule('week6', this)">Final Review 6: Teleological</button>
+                <button class="module-btn" data-week="week7" onclick="switchModule('week7', this)">Final Review 7: Atheism/Agnosticism</button>
+                <button class="module-btn" data-week="week8" onclick="switchModule('week8', this)">Final Review 8: Evil</button>
+                <button class="module-btn" data-week="week9" onclick="switchModule('week9', this)">Final Review 9: Experience</button>
+                <button class="module-btn" data-week="week10" onclick="switchModule('week10', this)">Final Review 10: Miracles</button>
+                <button class="module-btn" data-week="week11" onclick="switchModule('week11', this)">Week 11: Revelation</button>
+                <button class="module-btn" data-week="week12" onclick="switchModule('week12', this)">Week 12: Religion & Morality</button>
+                <button class="module-btn" data-week="week13" onclick="switchModule('week13', this)">Week 13: Feminist Philosophy of Religion</button>
+                <button class="module-btn" data-week="week14" onclick="switchModule('week14', this)">Week 14: Religion & Violence</button>
+                <button class="module-btn" data-week="week15" onclick="switchModule('week15', this)">Week 15: Religious Pluralism</button>
+                <button class="module-btn" data-week="week16" onclick="switchModule('week16', this)">Week 16: Faith, Doubt, and Disagreement</button>
+            </div>
+
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 10px;">
+                <label for="week-jump"><strong>Quick Jump:</strong></label>
+                <select id="week-jump" style="flex: 1 1 280px; min-width: 220px; padding: 8px; border-radius: 8px; border: 1px solid #c7c7c7;">
+                    <option value="week1">Week 1: What is Philosophy of Religion?</option>
+                    <option value="week2">Week 2: Faith, Reason & Authority</option>
+                    <option value="week3">Week 3: Religious Language</option>
+                    <option value="week4">Week 4: Ontological Arguments</option>
+                    <option value="week5">Week 5: Cosmological Arguments</option>
+                    <option value="week6">Final Review Week 6: Teleological Arguments</option>
+                    <option value="week7">Final Review Week 7: Atheism and Agnosticism</option>
+                    <option value="week8">Final Review Week 8: Problem of Evil</option>
+                    <option value="week9">Final Review Week 9: Religious Experience</option>
+                    <option value="week10">Final Review Week 10: Miracles</option>
+                    <option value="week11">Week 11: Revelation</option>
+                    <option value="week12">Week 12: Religion & Morality</option>
+                    <option value="week13">Week 13: Feminist Philosophy of Religion</option>
+                    <option value="week14">Week 14: Religion & Violence</option>
+                    <option value="week15">Week 15: Religious Pluralism</option>
+                    <option value="week16">Week 16: Faith, Doubt, and Disagreement</option>
+                </select>
+                <button type="button" onclick="goToSelectedWeek()">Open Week</button>
+            </div>
+
+            <!-- WEEK 1 -->
+            <div id="week1" class="module-content active">
+                <div class="module-header">
+                    <h3>Week 1: What is Philosophy of Religion?</h3>
+                    <p class="subtle">This week introduces philosophy of religion as a discipline. The goal is to understand what philosophers are doing when they analyze religion.</p>
+                </div>
+
+                <div class="learning-section">
+                    <h4>📖 What This Week Is About</h4>
+                    <p>Philosophy of religion examines religious ideas using philosophical tools: <strong>conceptual clarity</strong>, <strong>argument analysis</strong>, and <strong>attention to disagreement</strong>.</p>
+                </div>
+
+                <div class="learning-section">
+                    <h4>✓ What To Do This Week (In Order)</h4>
+                    <ol>
+                        <li>Read the IEP article <a href="https://iep.utm.edu/religion/" target="_blank">Philosophy of Religion</a></li>
+                        <li>Engage in this week's discussion (below)</li>
+                    </ol>
+                </div>
+
+                <div class="assignment">
+                    <h4>💬 Discussion — Course Introduction</h4>
+                    <div class="assignment-instruction">
+                        <strong>Part A — Original Post (200–250 words)</strong><br><br>
+                        1. What interests you about philosophy or philosophical questions?<br>
+                        2. What do you think philosophy is for?<br>
+                        3. What do you expect to be challenging about this course?<br><br>
+                        Keep your focus on learning and method, not personal convictions.
+                    </div>
+
+                    <div class="assignment-instruction">
+                        <strong>Part B — Response to a Classmate (100–150 words)</strong><br><br>
+                        Reply by identifying a shared interest or asking a clarifying question. Avoid agreement/disagreement language.
+                    </div>
+                </div>
+
+                <div class="learning-section">
+                    <h4>🎯 By the End of This Week, You Should Be Able To:</h4>
+                    <ul>
+                        <li>Explain what philosophy of religion studies</li>
+                        <li>Distinguish philosophical analysis from theology and personal belief</li>
+                        <li>Recognize the kinds of questions philosophers ask about religion</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- WEEK 2 -->
+            <div id="week2" class="module-content">
+                <div class="module-header">
+                    <h3>Week 2: Faith, Reason, and Authority</h3>
+                    <p class="subtle">Philosophers disagree about what faith is, how it relates to evidence, and whether it conflicts with reason.</p>
+                </div>
+
+                <div class="learning-section">
+                    <h4>📖 What This Week Is About</h4>
+                    <p>Philosophical debates about religion often begin with disagreements about what <strong>"faith"</strong> means. Philosophers analyze faith as belief, trust, commitment, or attitude.</p>
+                </div>
+
+                <div class="learning-section">
+                    <h4>✓ What To Do This Week (In Order)</h4>
+                    <ol>
+                        <li>Read the IEP article <a href="https://iep.utm.edu/faith-re/" target="_blank">Faith and Reason</a></li>
+                        <li>Read and work through the SEP Companion Sheet: Faith (below)</li>
+                        <li>Complete Concept Extraction Brief #1 (assignment below)</li>
+                    </ol>
+                </div>
+
+                <div class="learning-section">
+                    <h4>SEP Companion Sheet: Faith</h4>
+                    <p><strong>What to Extract:</strong></p>
+                    <ul>
+                        <li>Two distinct ways faith is understood philosophically</li>
+                        <li>For each, note whether faith is treated as: belief, trust, or commitment</li>
+                        <li>Write one sentence explaining why these differences matter for arguments about religion</li>
+                    </ul>
+                    <p><strong>One Required Check:</strong> Why can't philosophers simply ask whether faith is "rational" without first clarifying what faith means?</p>
+                </div>
+
+                <div class="assignment">
+                    <h4>📝 Concept Extraction Brief #1</h4>
+                    <p><strong>Length:</strong> 300–400 words | <strong>Sources:</strong> IEP reading + SEP Companion Sheet</p>
+
+                    <div class="assignment-instruction">
+                        <strong>Part A — Core Concept (IEP)</strong><br>
+                        1. Identify one key concept from the IEP reading<br>
+                        2. Define it in your own words (2–3 sentences)<br>
+                        3. Explain why this concept matters philosophically<br><br>
+                        <strong>Be precise. Avoid copying.</strong>
+                    </div>
+
+                    <div class="assignment-instruction">
+                        <strong>Part B — Structural Distinction (SEP)</strong><br>
+                        1. Identify one distinction introduced in the SEP Companion Sheet<br>
+                        2. Explain what confusion this distinction helps prevent<br>
+                        3. Explain what would go wrong if this distinction were ignored
+                    </div>
+                </div>
+
+                <div class="learning-section">
+                    <h4>🎯 By the End of This Week, You Should Be Able To:</h4>
+                    <ul>
+                        <li>Identify different philosophical models of faith</li>
+                        <li>Explain why definitions matter philosophically</li>
+                        <li>Avoid treating "faith vs. reason" as a simple opposition</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- WEEK 3 -->
+            <div id="week3" class="module-content">
+                <div class="module-header">
+                    <h3>Week 3: Religious Language</h3>
+                    <p class="subtle">Many disputes about religion depend on whether religious claims are meant to work like ordinary factual statements.</p>
+                </div>
+
+                <div class="learning-section">
+                    <h4>📖 What This Week Is About</h4>
+                    <p>Philosophers analyze religious language to determine whether it should be understood <strong>literally, symbolically, or analogically</strong>.</p>
+                </div>
+
+                <div class="learning-section">
+                    <h4>✓ What To Do This Week (In Order)</h4>
+                    <ol>
+                        <li>Read the IEP article <a href="https://iep.utm.edu/rel-lang/" target="_blank">Religious Language</a></li>
+                        <li>Read and work through the SEP Companion Sheet: Religious Language (below)</li>
+                        <li>Complete Concept Extraction Brief #2 (assignment below)</li>
+                    </ol>
+                </div>
+
+                <div class="learning-section">
+                    <h4>SEP Companion Sheet: Religious Language</h4>
+                    <p><strong>What to Extract:</strong></p>
+                    <ul>
+                        <li>Two different ways religious language is understood</li>
+                        <li>For each, note whether claims are treated as: literally true/false, or meaningful without being factual</li>
+                        <li>Write one sentence explaining why this complicates argument</li>
+                    </ul>
+                    <p><strong>One Required Check:</strong> If religious language is not meant to describe facts, what happens to arguments that try to disprove religion by contradiction?</p>
+                </div>
+
+                <div class="assignment">
+                    <h4>📝 Concept Extraction Brief #2</h4>
+                    <p><strong>Length:</strong> 300–400 words | <strong>Sources:</strong> IEP reading + SEP Companion Sheet</p>
+
+                    <div class="assignment-instruction">
+                        <strong>Part A — Core Concept (IEP)</strong><br>
+                        1. Identify one key concept from the IEP reading<br>
+                        2. Define it in your own words (2–3 sentences)<br>
+                        3. Explain why this concept matters for understanding religious language
+                    </div>
+
+                    <div class="assignment-instruction">
+                        <strong>Part B — Structural Distinction (SEP)</strong><br>
+                        1. Identify one distinction from the SEP Companion Sheet<br>
+                        2. Explain what confusion this prevents<br>
+                        3. Explain what would go wrong if ignored
+                    </div>
+                </div>
+
+                <div class="learning-section">
+                    <h4>🎯 By the End of This Week, You Should Be Able To:</h4>
+                    <ul>
+                        <li>Distinguish different models of religious language</li>
+                        <li>Explain why meaning affects argument structure</li>
+                        <li>Recognize why debates can fail at the level of language</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- WEEK 4 -->
+            <div id="week4" class="module-content">
+                <div class="module-header">
+                    <h3>Week 4: Ontological Arguments</h3>
+                    <p class="subtle">Ontological arguments attempt to derive existence from concepts alone. This week focuses on argument structure, pressure points, and why these arguments remain philosophically significant even when rejected.</p>
+                </div>
+
+                <div class="learning-section">
+                    <h4>📖 What This Week Is About</h4>
+                    <p>Ontological arguments begin from <strong>reason alone</strong> rather than observation. Philosophers analyze whether concepts, definitions, and necessity claims can carry existential force.</p>
+                </div>
+
+                <div class="learning-section">
+                    <h4>✓ What To Do This Week (In Order)</h4>
+                    <ol>
+                        <li>Read the IEP article <a href="https://iep.utm.edu/anselm-ontological-argument/" target="_blank">Ontological Arguments</a></li>
+                        <li>Read the SEP Companion Sheet: Ontological Arguments</li>
+                        <li>Complete Argument Structure Analysis #1</li>
+                    </ol>
+                    <p><strong>Purpose:</strong> Understand how the argument works structurally.</p>
+                </div>
+
+                <div class="learning-section">
+                    <h4>SEP Companion Sheet: Ontological Arguments</h4>
+                    <p><strong>Narrative Context:</strong> Unlike cosmological and teleological arguments, ontological arguments do not start from world-features like causation or design. They test the limits of logic, definition, and necessity.</p>
+                    <p><strong>Assigned Excerpts:</strong></p>
+                    <ol>
+                        <li>What Ontological Arguments Are</li>
+                        <li>Why Ontological Arguments Are Difficult to Classify</li>
+                        <li>Uses and Goals of Ontological Arguments</li>
+                        <li>General Objections</li>
+                    </ol>
+                    <p><strong>What to Pull Out:</strong></p>
+                    <ul>
+                        <li>The defining feature that distinguishes ontological arguments from cosmological or teleological arguments</li>
+                        <li>One reason philosophers still find ontological arguments interesting even when they reject them</li>
+                        <li>One general type of objection raised against ontological arguments</li>
+                    </ul>
+                    <p><strong>How SEP Changes IEP:</strong> SEP highlights that ontological arguments are not only theological claims; they are also stress tests for logic and conceptual commitment.</p>
+                    <p><strong>Write one sentence:</strong> what SEP makes clearer than IEP.</p>
+                    <p><strong>Self-Check:</strong> Why do ontological arguments test the limits of reason more directly than other arguments for God's existence?</p>
+                    <p><strong>Assigned SEP Source:</strong> <a href="https://plato.stanford.edu/entries/ontological-arguments/" target="_blank">Ontological Arguments</a> (instructor-selected excerpts only).</p>
+                </div>
+
+                <div class="learning-section">
+                    <h4>🎯 When You Are Done</h4>
+                    <ul>
+                        <li>Reconstruct the structure of an ontological argument</li>
+                        <li>Identify key philosophical pressure points</li>
+                        <li>Explain why failed arguments can remain philosophically important</li>
+                    </ul>
+                    <p><strong>Course Learning Outcomes Addressed:</strong> SLO 2 (philosophical discourse) and SLO 4 (constructing philosophical arguments).</p>
+                </div>
+
+                <div class="assignment">
+                    <h4>📝 Argument Structure Analysis #1</h4>
+                    <p><strong>Due:</strong> [date] | <strong>Length:</strong> 500–600 words | <strong>Sources:</strong> This week's IEP reading + SEP Companion Sheet</p>
+
+                    <div class="assignment-instruction">
+                        <strong>Purpose</strong><br>
+                        Train yourself to see philosophical arguments as structures, not positions to agree or disagree with.
+                    </div>
+
+                    <div class="assignment-instruction">
+                        <strong>Part A — Argument Structure (IEP)</strong><br>
+                        Choose one argument or challenge from this week's IEP reading and reconstruct it by identifying:<br>
+                        1. the starting assumption<br>
+                        2. the key logical move<br>
+                        3. the conclusion<br><br>
+                        Do not critique the argument. Do not quote the text.
+                    </div>
+
+                    <div class="assignment-instruction">
+                        <strong>Part B — Philosophical Pressure (SEP)</strong><br>
+                        1. Identify one philosophical pressure placed on this argument<br>
+                        2. Indicate whether the pressure targets logic, assumptions, or standards of evidence<br>
+                        3. Explain why this pressure does not automatically end the argument
+                    </div>
+
+                    <div class="assignment-instruction">
+                        <strong>Constraints</strong><br>
+                        No personal belief statements.<br>
+                        No outside research.<br>
+                        Focus on structure, not persuasion.
+                    </div>
+
+                    <div class="assignment-instruction">
+                        <strong>Assessment Focus</strong><br>
+                        Structural accuracy, correct pressure-point identification, clarity, and precision.
+                    </div>
+                </div>
+            </div>
+
+            <!-- WEEK 5 -->
+            <div id="week5" class="module-content">
+                <div class="module-header">
+                    <h3>Week 5: Cosmological Arguments</h3>
+                    <p class="subtle">This week explores arguments that attempt to explain why anything exists at all. The emphasis is on types of explanation, causation, and necessity.</p>
+                </div>
+
+                <div class="learning-section">
+                    <h4>📖 What This Week Is About</h4>
+                    <p>Cosmological arguments seek ultimate explanations. Philosophers distinguish <strong>causal explanation</strong> from <strong>metaphysical explanation</strong> and disagree about what counts as a satisfactory stopping point.</p>
+                </div>
+
+                <div class="learning-section">
+                    <h4>✓ What To Do This Week (In Order)</h4>
+                    <ol>
+                        <li>Read the IEP article <a href="https://iep.utm.edu/religion/#SH4b" target="_blank">Cosmological Arguments</a></li>
+                        <li>Read the SEP Companion Sheet: Cosmological Arguments</li>
+                        <li>Complete Concept Extraction Brief #3</li>
+                    </ol>
+                    <p><strong>Purpose:</strong> Prevent "first cause = God, done" thinking by keeping argument structure and standards of explanation explicit.</p>
+                </div>
+
+                <div class="learning-section">
+                    <h4>SEP Companion Sheet: Cosmological Arguments</h4>
+                    <p><strong>Narrative Context:</strong> Unlike ontological arguments that begin from concepts, cosmological arguments begin from features of the world (contingency, causation, change) and ask whether these require explanation beyond the world.</p>
+                    <p><strong>Assigned Excerpts:</strong></p>
+                    <ol>
+                        <li>What cosmological arguments are</li>
+                        <li>Contingency and necessity</li>
+                        <li>Why infinite regress matters</li>
+                        <li>General objections</li>
+                    </ol>
+                    <p><strong>What to Pull Out:</strong></p>
+                    <ul>
+                        <li>The difference between contingent and necessary beings</li>
+                        <li>One reason cosmological arguments appeal to explanation rather than observation</li>
+                        <li>One objection to the need for a first cause or necessary being</li>
+                    </ul>
+                    <p><strong>How SEP Changes the IEP Picture:</strong> cosmological arguments are primarily about explanation, not merely about temporal beginnings.</p>
+                    <p><strong>Write one sentence:</strong> what SEP makes clearer than IEP.</p>
+                    <p><strong>One Required Check:</strong> Why do cosmological arguments focus on explanation rather than empirical observation?</p>
+                    <p><strong>Assigned SEP Source:</strong> <a href="https://plato.stanford.edu/entries/cosmological-argument/" target="_blank">Cosmological Argument</a> (instructor-selected excerpts only).</p>
+                </div>
+
+                <div class="learning-section">
+                    <h4>🎯 When You Are Done</h4>
+                    <ul>
+                        <li>Distinguish causal from metaphysical explanation</li>
+                        <li>Explain why first cause arguments remain controversial</li>
+                        <li>Identify what kind of explanation is being sought</li>
+                    </ul>
+                    <p><strong>Course Learning Outcomes Addressed:</strong> SLO 2 (philosophical discourse) and SLO 4 (constructing philosophical arguments).</p>
+                </div>
+
+                <div class="assignment">
+                    <h4>📝 Concept Extraction Brief #3</h4>
+                    <p><strong>Due:</strong> [date] | <strong>Length:</strong> 300–400 words | <strong>Sources:</strong> This week's IEP reading + SEP Companion Sheet</p>
+
+                    <div class="assignment-instruction">
+                        <strong>Purpose</strong><br>
+                        Train accurate concept extraction instead of summary or evaluation.
+                    </div>
+
+                    <div class="assignment-instruction">
+                        <strong>Part A — Core Concept (IEP)</strong><br>
+                        1. Identify one key concept from the IEP reading<br>
+                        2. Define the concept in your own words (2–3 sentences)<br>
+                        3. Explain why this concept matters for the philosophical problem under discussion
+                    </div>
+
+                    <div class="assignment-instruction">
+                        <strong>Part B — Structural Distinction (SEP)</strong><br>
+                        1. Identify one distinction introduced in the SEP Companion Sheet<br>
+                        2. Explain what confusion this distinction helps prevent<br>
+                        3. Explain what would go wrong in the debate if this distinction were ignored
+                    </div>
+
+                    <div class="assignment-instruction">
+                        <strong>Constraints</strong><br>
+                        Do not state agreement or disagreement.<br>
+                        Do not discuss personal belief.<br>
+                        Do not use outside sources.<br>
+                        Your task is explanation, not evaluation.
+                    </div>
+
+                    <div class="assignment-instruction">
+                        <strong>Assessment Focus</strong><br>
+                        Accuracy of concepts, correct use of distinctions, clarity of explanation, and responsiveness to the prompt.
+                    </div>
+                </div>
+            </div>
+
+            <!-- WEEK 6 -->
+            <div id="week6" class="module-content">
+                <div class="module-header">
+                    <h3>Final Review Week 6: Teleological Arguments</h3>
+                    <p class="subtle">Final exam focus topic 1 (separate topic): teleological arguments. Design arguments feel intuitive because order seems to suggest purpose, but philosophers disagree about what kind of explanation design arguments actually provide.</p>
+                </div>
+
+                <div class="learning-section">
+                    <h4>📖 What This Week Is About</h4>
+                    <p>This week studies teleological arguments, especially how <strong>fine-tuning</strong>, <strong>probability</strong>, and <strong>explanation</strong> interact. The question is not whether science makes design impossible, but what sort of inference design arguments are claiming to make.</p>
+                </div>
+
+                <div class="learning-section">
+                    <h4>✓ What To Do This Week (In Order)</h4>
+                    <ol>
+                        <li>Read the IEP material on design/teleological arguments</li>
+                        <li>Read the SEP Companion Sheet: Teleological Arguments</li>
+                        <li>Complete Argument Analysis #2</li>
+                    </ol>
+                </div>
+
+                <div class="learning-section">
+                    <h4>SEP Companion Sheet: Teleological Arguments</h4>
+                    <p><strong>What to Extract:</strong></p>
+                    <ul>
+                        <li>What fine-tuning arguments point to in general terms</li>
+                        <li>Whether they rely on probability, necessity, or explanation</li>
+                        <li>One reason philosophers disagree about their strength</li>
+                    </ul>
+                    <p><strong>How SEP Complicates IEP:</strong> SEP shows why scientific progress does not settle the issue and why explanation and probability are easily confused.</p>
+                    <p><strong>One Required Check:</strong> Why does scientific explanation not automatically eliminate philosophical questions about design?</p>
+                </div>
+
+                <div class="assignment">
+                    <h4>📝 Argument Analysis #2</h4>
+                    <p><strong>Length:</strong> 500–600 words | <strong>Sources:</strong> This week's IEP reading + SEP Companion Sheet</p>
+
+                    <div class="assignment-instruction">
+                        <strong>Part A — Argument Structure (IEP)</strong><br>
+                        1. Identify the starting assumption<br>
+                        2. Identify the key logical move<br>
+                        3. Identify the conclusion<br><br>
+                        Do not critique the argument. Do not quote the text.
+                    </div>
+
+                    <div class="assignment-instruction">
+                        <strong>Part B — Philosophical Pressure (SEP)</strong><br>
+                        1. Identify one philosophical pressure placed on the argument<br>
+                        2. State whether that pressure targets logic, assumptions, or standards of evidence<br>
+                        3. Explain why this pressure does not automatically end the argument
+                    </div>
+                </div>
+            </div>
+
+            <!-- WEEK 7 -->
+            <div id="week7" class="module-content">
+                <div class="module-header">
+                    <h3>Final Review Week 7: Atheism and Agnosticism</h3>
+                    <p class="subtle">Final exam focus topic 2 (separate topic): atheism and agnosticism. This week clarifies different forms of nonbelief and distinguishes denying belief, suspending belief, and making claims about knowledge.</p>
+                </div>
+
+                <div class="learning-section">
+                    <h4>📖 What This Week Is About</h4>
+                    <p>Nonbelief is not a single position. Philosophers analyze atheism and agnosticism to avoid false binaries and to distinguish <strong>belief claims</strong> from <strong>knowledge claims</strong>.</p>
+                </div>
+
+                <div class="learning-section">
+                    <h4>✓ What To Do This Week (In Order)</h4>
+                    <ol>
+                        <li>Read the IEP article <a href="https://iep.utm.edu/atheism/" target="_blank">Atheism</a></li>
+                        <li>Read the SEP Companion Sheet: Atheism and Agnosticism</li>
+                        <li>Complete Concept Extraction Brief #4</li>
+                    </ol>
+                </div>
+
+                <div class="learning-section">
+                    <h4>SEP Companion Sheet: Atheism and Agnosticism</h4>
+                    <p><strong>What to Extract:</strong></p>
+                    <ul>
+                        <li>One definition of atheism</li>
+                        <li>One definition of agnosticism</li>
+                        <li>One way the two differ in terms of knowledge claims</li>
+                    </ul>
+                    <p><strong>How SEP Clarifies IEP:</strong> SEP explains why nonbelief is not simply “lack of belief” and why epistemic humility matters.</p>
+                    <p><strong>One Required Check:</strong> Why does it matter whether nonbelief is framed as a knowledge claim or a belief claim?</p>
+                </div>
+
+                <div class="assignment">
+                    <h4>📝 Concept Extraction Brief #4</h4>
+                    <p><strong>Length:</strong> 300–400 words | <strong>Sources:</strong> This week's IEP reading + SEP Companion Sheet</p>
+
+                    <div class="assignment-instruction">
+                        <strong>Part A — Core Concept (IEP)</strong><br>
+                        1. Identify one key concept from the IEP reading<br>
+                        2. Define it in your own words (2–3 sentences)<br>
+                        3. Explain why this concept matters for the philosophical problem under discussion
+                    </div>
+
+                    <div class="assignment-instruction">
+                        <strong>Part B — Structural Distinction (SEP)</strong><br>
+                        1. Identify one distinction introduced in the SEP Companion Sheet<br>
+                        2. Explain what confusion this distinction helps prevent<br>
+                        3. Explain what would go wrong in the debate if this distinction were ignored
+                    </div>
+                </div>
+            </div>
+
+            <!-- WEEK 8 -->
+            <div id="week8" class="module-content">
+                <div class="module-header">
+                    <h3>Final Review Week 8: The Problem of Evil</h3>
+                    <p class="subtle">Final exam focus topic 3 (separate topic): the problem of evil. This week examines whether evil is compatible with a perfectly good, all-powerful, and all-knowing God.</p>
+                </div>
+
+                <div class="learning-section">
+                    <h4>📖 What This Week Is About</h4>
+                    <p>The emphasis this week is on <strong>logical structure</strong>, not emotional response. Philosophers distinguish the <strong>logical</strong> and <strong>evidential</strong> problems of evil and analyze why the challenge persists.</p>
+                </div>
+
+                <div class="learning-section">
+                    <h4>✓ What To Do This Week (In Order)</h4>
+                    <ol>
+                        <li>Read the IEP article <a href="https://iep.utm.edu/evil-log/" target="_blank">Problem of Evil</a></li>
+                        <li>Read the SEP Companion Sheet: Problem of Evil</li>
+                        <li>Complete Argument Structure Analysis #3</li>
+                    </ol>
+                </div>
+
+                <div class="learning-section">
+                    <h4>SEP Companion Sheet: Problem of Evil</h4>
+                    <p><strong>What to Extract:</strong></p>
+                    <ul>
+                        <li>The three attributes traditionally ascribed to God</li>
+                        <li>The claim about evil that creates tension with those attributes</li>
+                        <li>How the evidential version differs from the logical version</li>
+                    </ul>
+                    <p><strong>How SEP Clarifies IEP:</strong> SEP shows that some challenges target inconsistency while others target plausibility and standards of success.</p>
+                    <p><strong>One Required Check:</strong> Why does separating the logical and evidential problems of evil change how philosophers argue about religion?</p>
+                </div>
+
+                <div class="assignment">
+                    <h4>📝 Argument Structure Analysis #3</h4>
+                    <p><strong>Length:</strong> 500–600 words | <strong>Sources:</strong> This week's IEP reading + SEP Companion Sheet</p>
+
+                    <div class="assignment-instruction">
+                        <strong>Part A — Argument Structure (IEP)</strong><br>
+                        1. Identify the starting assumption<br>
+                        2. Identify the key logical move<br>
+                        3. Identify the conclusion<br><br>
+                        Do not critique the argument. Focus on structure.
+                    </div>
+
+                    <div class="assignment-instruction">
+                        <strong>Part B — Philosophical Pressure (SEP)</strong><br>
+                        1. Identify one pressure placed on the argument<br>
+                        2. State whether it targets logic, assumptions, or standards of evidence<br>
+                        3. Explain why the pressure does not automatically end the argument
+                    </div>
+                </div>
+
+                <div class="assignment">
+                    <h4>💬 Discussion — The Problem of Evil as Philosophical Pressure</h4>
+                    <div class="assignment-instruction">
+                        Choose one version of the problem of evil, logical or evidential. Explain how it creates pressure on a conception of God, what is lost if the pressure is resolved in one direction, and what is lost if it is resolved in the other. Do not resolve the problem.
+                    </div>
+                </div>
+            </div>
+
+            <!-- WEEK 9 -->
+            <div id="week9" class="module-content">
+                <div class="module-header">
+                    <h3>Final Review Week 9: Religious Experience</h3>
+                    <p class="subtle">Final exam focus topic 4 (separate topic): religious experience. This week examines whether religious experiences can function as evidence.</p>
+                </div>
+
+                <div class="learning-section">
+                    <h4>📖 What This Week Is About</h4>
+                    <p>The emphasis this week is on <strong>justification</strong>, not sincerity. Philosophers debate whether experience can justify belief and what standards of evidence apply.</p>
+                </div>
+
+                <div class="learning-section">
+                    <h4>✓ What To Do This Week (In Order)</h4>
+                    <ol>
+                        <li>Read the IEP articles on religious experience (William James and epistemology sections)</li>
+                        <li>Read the SEP Companion Sheet: Religious Experience</li>
+                        <li>Complete Philosophical Tension Memo #1</li>
+                    </ol>
+                </div>
+
+                <div class="learning-section">
+                    <h4>SEP Companion Sheet: Religious Experience</h4>
+                    <p><strong>What to Extract:</strong></p>
+                    <ul>
+                        <li>One reason philosophers think experience might count as evidence</li>
+                        <li>One reason philosophers think experience cannot automatically count as evidence</li>
+                        <li>One condition often required before experience has epistemic weight</li>
+                    </ul>
+                    <p><strong>How SEP Sharpens IEP:</strong> SEP makes clear that experience does not bypass epistemology and that disagreement persists because standards of evidence differ.</p>
+                    <p><strong>One Required Check:</strong> Why does having a powerful experience not automatically justify a belief philosophically speaking?</p>
+                </div>
+
+                <div class="assignment">
+                    <h4>📝 Philosophical Tension Memo #1</h4>
+                    <p><strong>Length:</strong> 400–500 words | <strong>Sources:</strong> SEP Companion Sheet (primary) + IEP reading</p>
+
+                    <div class="assignment-instruction">
+                        <strong>Part A — Identify the Tension</strong><br>
+                        1. Clearly state one philosophical tension from the SEP Companion Sheet<br>
+                        2. Identify the two competing pressures involved
+                    </div>
+
+                    <div class="assignment-instruction">
+                        <strong>Part B — Why the Tension Persists</strong><br>
+                        1. Explain what is lost if the tension is resolved in one direction<br>
+                        2. Explain what is lost if it is resolved in the opposite direction<br><br>
+                        Do not resolve the tension.
+                    </div>
+                </div>
+            </div>
+
+            <!-- WEEK 10 -->
+            <div id="week10" class="module-content">
+                <div class="module-header">
+                    <h3>Final Review Week 10: Miracles</h3>
+                    <p class="subtle">Final exam focus topic 5 (separate topic): miracles. This week focuses on miracle claims as problems of testimony and probability.</p>
+                </div>
+
+                <div class="learning-section">
+                    <h4>📖 What This Week Is About</h4>
+                    <p>The emphasis this week is on <strong>evidence evaluation</strong>. Philosophers analyze miracle claims by examining testimony, likelihood, and standards of proof.</p>
+                </div>
+
+                <div class="learning-section">
+                    <h4>✓ What To Do This Week (In Order)</h4>
+                    <ol>
+                        <li>Read the IEP article <a href="https://iep.utm.edu/miracles/" target="_blank">Miracles</a></li>
+                        <li>Read the SEP Companion Sheet: Miracles</li>
+                        <li>Complete Argument Structure Analysis #4</li>
+                    </ol>
+                </div>
+
+                <div class="learning-section">
+                    <h4>SEP Companion Sheet: Miracles</h4>
+                    <p><strong>What to Extract:</strong></p>
+                    <ul>
+                        <li>One reason Hume is skeptical of miracle claims</li>
+                        <li>What role testimony plays in miracle reports</li>
+                        <li>One way probability affects evaluation of miracles</li>
+                    </ul>
+                    <p><strong>How SEP Clarifies IEP:</strong> SEP shows why skepticism is methodological, not dismissive, and why extraordinary claims require extraordinary evidence.</p>
+                    <p><strong>One Required Check:</strong> Why does philosophical skepticism about miracles focus more on evidence than on possibility?</p>
+                </div>
+
+                <div class="learning-section">
+                    <h4>Related Topics the AI Can Help With</h4>
+                    <ul>
+                        <li>Revelation and why it creates epistemic problems</li>
+                        <li>Religion and morality through Divine Command Theory</li>
+                        <li>Feminist critiques of patriarchal concepts of God and the “problem of God”</li>
+                    </ul>
+                </div>
+
+                <div class="assignment">
+                    <h4>📝 Argument Structure Analysis #4</h4>
+                    <p><strong>Length:</strong> 500–600 words | <strong>Sources:</strong> This week's IEP reading + SEP Companion Sheet</p>
+
+                    <div class="assignment-instruction">
+                        <strong>Part A — Argument Structure (IEP)</strong><br>
+                        1. Identify the starting assumption<br>
+                        2. Identify the key logical move<br>
+                        3. Identify the conclusion
+                    </div>
+
+                    <div class="assignment-instruction">
+                        <strong>Part B — Philosophical Pressure (SEP)</strong><br>
+                        1. Identify one philosophical pressure placed on the argument<br>
+                        2. State whether it targets logic, assumptions, or standards of evidence<br>
+                        3. Explain why this pressure does not automatically end the argument
+                    </div>
+                </div>
+            </div>
+
+            <!-- WEEK 11 -->
+            <div id="week11" class="module-content">
+                <div class="module-header">
+                    <h3>Week 11: Revelation</h3>
+                    <p class="subtle">This week examines claims of divine revelation. Claims about revelation take different forms in Judaism, Christianity, and Islam, and disputes over authority, interpretation, and finality are central both to philosophical critique and to historical conflict.</p>
+                </div>
+
+                <div class="learning-section">
+                    <h4>📖 What This Week Is About</h4>
+                    <p>Philosophers analyze whether revelation can justify belief and how interpretation complicates authority. The emphasis this week is on <strong>authority</strong> and <strong>interpretation</strong>.</p>
+                </div>
+
+                <div class="learning-section">
+                    <h4>✓ What To Do This Week (In Order)</h4>
+                    <ol>
+                        <li>Read the IEP article <a href="https://iep.utm.edu/faith-contemporary-perspectives/#SSH3aii" target="_blank">Revelation (Faith and Knowledge)</a></li>
+                        <li>Read the SEP Companion Sheet: Revelation</li>
+                        <li>Complete Philosophical Tension Memo #2</li>
+                    </ol>
+                    <p><strong>Purpose:</strong> Shows why revelation creates epistemic problems.</p>
+                </div>
+
+                <div class="learning-section">
+                    <h4>SEP Companion Sheet: Revelation</h4>
+                    <p><strong>Narrative Context:</strong> Revelation is often treated as a shortcut to knowledge, but philosophers ask what justifies treating a claimed revelation as authoritative knowledge, especially when interpretations conflict.</p>
+                    <p><strong>What Question This Section Is Answering:</strong> What justifies treating a claimed revelation as authoritative knowledge?</p>
+                    <p><strong>What to Pull Out:</strong></p>
+                    <ul>
+                        <li>One problem philosophers identify with revelation claims</li>
+                        <li>One reason revelation does not automatically override reason</li>
+                        <li>One source of disagreement about interpretation</li>
+                    </ul>
+                    <p><strong>How This Changes the IEP Picture:</strong> SEP clarifies why authority is contested, why interpretation cannot be avoided, and why revelation multiplies disagreement rather than resolves it.</p>
+                    <p><strong>Write one sentence:</strong> Explain what SEP adds.</p>
+                    <p><strong>Exactly How You Will Use This Later:</strong> discussing religious disagreement, analyzing scriptural authority, and evaluating appeals to divine command.</p>
+                    <p><strong>One Required Check:</strong> Why does revelation create epistemic problems even for believers?</p>
+                    <p><strong>Assigned SEP Source:</strong> <a href="https://plato.stanford.edu/entries/divine-revelation/" target="_blank">Divine Revelation</a> (instructor-selected excerpts only).</p>
+                </div>
+
+                <div class="learning-section">
+                    <h4>🎯 When You Are Done</h4>
+                    <ul>
+                        <li>Explain why revelation raises epistemic problems</li>
+                        <li>Identify sources of interpretive disagreement</li>
+                        <li>Understand why authority does not bypass reason</li>
+                    </ul>
+                    <p><strong>Course Learning Outcomes Addressed This Week:</strong> SLO 2 (philosophical discourse) and SLO 3 (core philosophical issues in religion).</p>
+                </div>
+
+                <div class="assignment">
+                    <h4>📝 Philosophical Tension Memo #2</h4>
+                    <p><strong>Due:</strong> [date] | <strong>Length:</strong> 400–500 words | <strong>Sources:</strong> SEP Companion Sheet (primary) + IEP reading</p>
+
+                    <div class="assignment-instruction">
+                        <strong>Purpose</strong><br>
+                        This assignment focuses on unresolved philosophical tension rather than solutions.
+                    </div>
+
+                    <div class="assignment-instruction">
+                        <strong>Part A — Identify the Tension</strong><br>
+                        1. Clearly state one philosophical tension presented in the SEP Companion Sheet<br>
+                        2. Identify the two competing pressures involved<br><br>
+                        Keep this neutral and analytical.
+                    </div>
+
+                    <div class="assignment-instruction">
+                        <strong>Part B — Why the Tension Persists</strong><br>
+                        1. Explain what is lost if the tension is resolved in one direction<br>
+                        2. Explain what is lost if it is resolved in the opposite direction<br><br>
+                        Do not resolve the tension.
+                    </div>
+
+                    <div class="assignment-instruction">
+                        <strong>Constraints</strong><br>
+                        Do not offer solutions or reforms.<br>
+                        Do not discuss personal belief.<br>
+                        Stay within the philosophical framework of the course.
+                    </div>
+
+                    <div class="assignment-instruction">
+                        <strong>How This Will Be Assessed</strong><br>
+                        Clarity of the identified tension, accuracy of philosophical framing, and ability to explain costs without collapsing complexity.
+                    </div>
+                </div>
+            </div>
+
+            <!-- WEEK 12 -->
+            <div id="week12" class="module-content">
+                <div class="module-header">
+                    <h3>Week 12: Religion & Morality</h3>
+                    <p class="subtle">This week examines whether morality depends on religion. The emphasis this week is on moral reasoning, not obedience.</p>
+                </div>
+
+                <div class="learning-section">
+                    <h4>📖 What This Week Is About</h4>
+                    <p>Philosophers analyze divine command theory, authority, and moral autonomy.</p>
+                </div>
+
+                <div class="learning-section">
+                    <h4>✓ What To Do This Week (In Order)</h4>
+                    <ol>
+                        <li>Read the IEP article <a href="https://iep.utm.edu/divine-command-theory/" target="_blank">Religion and Morality (Divine Command Theory)</a></li>
+                        <li>Read the SEP Companion Sheet: Religion and Morality</li>
+                        <li>Complete Philosophical Tension Memo #3</li>
+                    </ol>
+                    <p><strong>Purpose:</strong> Complicates "religion = morality" assumptions.</p>
+                </div>
+
+                <div class="learning-section">
+                    <h4>SEP Companion Sheet: Religion and Morality</h4>
+                    <p><strong>Narrative Context:</strong> Many people assume religion and morality are inseparable, but philosophical analysis asks whether moral obligation can be grounded solely in divine command without creating contradiction or arbitrariness.</p>
+                    <p><strong>What Question This Section Is Answering:</strong> Can moral obligation be grounded solely in divine command without creating contradictions or arbitrariness?</p>
+                    <p><strong>What to Pull Out:</strong></p>
+                    <ul>
+                        <li>One claim made by divine command theory</li>
+                        <li>One philosophical problem raised against it</li>
+                        <li>One reason philosophers think morality cannot depend entirely on command</li>
+                    </ul>
+                    <p><strong>How This Changes the IEP Picture:</strong> SEP sharpens where the tension becomes precise, why authority does not automatically create obligation, and why moral reasoning cannot be bypassed.</p>
+                    <p><strong>Write one sentence:</strong> Explain what SEP sharpens.</p>
+                    <p><strong>Exactly How You Will Use This Later:</strong> discussing moral disagreement, evaluating religious authority, and explaining why morality cannot be reduced to obedience.</p>
+                    <p><strong>One Required Check:</strong> Why does grounding morality entirely in divine command create philosophical problems rather than solve them?</p>
+                    <p><strong>Assigned SEP Source:</strong> <a href="https://plato.stanford.edu/entries/religion-morality/" target="_blank">Religion and Morality in Western Philosophy</a> (instructor-selected excerpts only).</p>
+                </div>
+
+                <div class="learning-section">
+                    <h4>🎯 When You Are Done</h4>
+                    <ul>
+                        <li>Explain challenges to divine command theory</li>
+                        <li>Distinguish moral reasoning from authority</li>
+                        <li>Articulate why morality cannot be reduced to command</li>
+                    </ul>
+                    <p><strong>Course Learning Outcomes Addressed This Week:</strong> SLO 2 (philosophical discourse) and SLO 3 (core philosophical issues in religion).</p>
+                </div>
+
+                <div class="assignment">
+                    <h4>📝 Philosophical Tension Memo #3</h4>
+                    <p><strong>Due:</strong> [date] | <strong>Length:</strong> 400–500 words | <strong>Sources:</strong> SEP Companion Sheet (primary) + IEP reading</p>
+
+                    <div class="assignment-instruction">
+                        <strong>Purpose</strong><br>
+                        This assignment focuses on unresolved philosophical tension rather than solutions. Many problems in philosophy of religion persist because resolving them creates new costs.
+                    </div>
+
+                    <div class="assignment-instruction">
+                        <strong>Part A — Identify the Tension</strong><br>
+                        1. Clearly state one philosophical tension presented in the SEP Companion Sheet<br>
+                        2. Identify the two competing pressures involved<br><br>
+                        Keep this neutral and analytical.
+                    </div>
+
+                    <div class="assignment-instruction">
+                        <strong>Part B — Why the Tension Persists</strong><br>
+                        1. Explain what is lost if the tension is resolved in one direction<br>
+                        2. Explain what is lost if it is resolved in the opposite direction<br><br>
+                        Do not resolve the tension.
+                    </div>
+
+                    <div class="assignment-instruction">
+                        <strong>Constraints</strong><br>
+                        Do not offer solutions or reforms.<br>
+                        Do not discuss personal belief.<br>
+                        Stay within the philosophical framework of the course.
+                    </div>
+
+                    <div class="assignment-instruction">
+                        <strong>How This Will Be Assessed</strong><br>
+                        Clarity of the identified tension, accuracy of philosophical framing, and ability to explain costs without collapsing complexity.
+                    </div>
+                </div>
+            </div>
+
+            <!-- WEEK 13 -->
+            <div id="week13" class="module-content">
+                <div class="module-header">
+                    <h3>Week 13: Feminist Philosophy of Religion</h3>
+                    <p class="subtle">This week introduces feminist critiques of religious concepts, language, and authority. The emphasis this week is on power and structure.</p>
+                </div>
+
+                <div class="learning-section">
+                    <h4>📖 What This Week Is About</h4>
+                    <p>Feminist philosophers examine how religious ideas encode power relations and shape authority claims.</p>
+                </div>
+
+                <div class="learning-section">
+                    <h4>✓ What To Do This Week (In Order)</h4>
+                    <ol>
+                        <li>Read the IEP baseline framework <a href="https://iep.utm.edu/religion/" target="_blank">Philosophy of Religion</a></li>
+                        <li>Read the SEP Companion Sheet: Feminist Philosophy of Religion</li>
+                        <li>Complete Philosophical Tension Memo #4</li>
+                    </ol>
+                    <p><strong>Purpose:</strong> Introduces structural critique.</p>
+                </div>
+
+                <div class="learning-section">
+                    <h4>SEP Companion Sheet: Feminist Philosophy of Religion</h4>
+                    <p><strong>Narrative Context:</strong> This week shifts from evaluating isolated claims to examining frameworks. Feminist philosophy of religion asks how concepts, language, and institutions are shaped by gendered power structures.</p>
+                    <p><strong>What Question This Section Is Answering:</strong> How do concepts of God, authority, and transcendence reflect and reinforce gendered assumptions?</p>
+                    <p><strong>What to Pull Out:</strong></p>
+                    <ul>
+                        <li>One example of how religious language can encode power</li>
+                        <li>One philosophical concern about portraying God in gendered terms</li>
+                        <li>One reason feminist philosophers argue neutrality is an illusion</li>
+                    </ul>
+                    <p><strong>How This Changes the IEP Picture:</strong> SEP adds analysis of standpoint and power, showing why some philosophical problems cannot be solved by argument-form alone.</p>
+                    <p><strong>Write one sentence:</strong> Explain what SEP adds.</p>
+                    <p><strong>Exactly How You Will Use This Later:</strong> evaluating claims of neutrality, discussing authority and interpretation, and explaining why critique may target systems rather than doctrines.</p>
+                    <p><strong>One Required Check:</strong> Why might philosophical critique focus on language and structure rather than truth claims alone?</p>
+                    <p><strong>Assigned SEP Source:</strong> <a href="https://plato.stanford.edu/entries/feminist-religion/" target="_blank">Feminist Philosophy of Religion</a> (instructor-selected excerpts only).</p>
+                </div>
+
+                <div class="learning-section">
+                    <h4>🎯 When You Are Done</h4>
+                    <ul>
+                        <li>Explain how religious concepts encode power</li>
+                        <li>Identify limits of neutrality claims</li>
+                        <li>Understand structural critique philosophically</li>
+                    </ul>
+                    <p><strong>Course Learning Outcomes Addressed This Week:</strong> SLO 2 (philosophical discourse) and SLO 3 (core philosophical issues in religion).</p>
+                </div>
+
+                <div class="assignment">
+                    <h4>📝 Philosophical Tension Memo #4</h4>
+                    <p><strong>Due:</strong> [date] | <strong>Length:</strong> 400–500 words | <strong>Sources:</strong> SEP Companion Sheet (primary) + IEP reading</p>
+
+                    <div class="assignment-instruction">
+                        <strong>Purpose</strong><br>
+                        This assignment focuses on unresolved philosophical tension rather than solutions. Many problems in philosophy of religion persist because resolving them creates new costs.
+                    </div>
+
+                    <div class="assignment-instruction">
+                        <strong>Part A — Identify the Tension</strong><br>
+                        1. Clearly state one philosophical tension presented in the SEP Companion Sheet<br>
+                        2. Identify the two competing pressures involved<br><br>
+                        Keep this neutral and analytical.
+                    </div>
+
+                    <div class="assignment-instruction">
+                        <strong>Part B — Why the Tension Persists</strong><br>
+                        1. Explain what is lost if the tension is resolved in one direction<br>
+                        2. Explain what is lost if it is resolved in the opposite direction<br><br>
+                        Do not resolve the tension.
+                    </div>
+
+                    <div class="assignment-instruction">
+                        <strong>Constraints</strong><br>
+                        Do not offer solutions or reforms.<br>
+                        Do not discuss personal belief.<br>
+                        Stay within the philosophical framework of the course.
+                    </div>
+
+                    <div class="assignment-instruction">
+                        <strong>How This Will Be Assessed</strong><br>
+                        Clarity of the identified tension, accuracy of philosophical framing, and ability to explain costs without collapsing complexity.
+                    </div>
+                </div>
+
+                <div class="assignment">
+                    <h4>💬 Discussion — Feminist Critique and Religious Concepts</h4>
+                    <div class="assignment-instruction">
+                        Choose one religious concept from this week's reading (for example: authority, transcendence, obedience, or purity). In your post: explain how it functions within a religious framework, analyze how feminist critique reframes or destabilizes it, and explain why this critique is philosophical rather than merely political. In your response: engage a classmate by clarifying how critique changes what counts as a "problem." Avoid personal belief statements.
+                    </div>
+                </div>
+            </div>
+
+            <!-- WEEK 14 -->
+            <div id="week14" class="module-content">
+                <div class="module-header">
+                    <h3>Week 14: Religion and Violence</h3>
+                    <p class="subtle">This week examines philosophical approaches to religion and violence by shifting the question from blame to mechanism. The emphasis is on moral framing, not accusation.</p>
+                </div>
+
+                <div class="learning-section">
+                    <h4>📖 What This Week Is About</h4>
+                    <p>Rather than asking whether religion causes violence, philosophers analyze how violence becomes morally intelligible within certain frameworks. The central mechanism is <strong>dehumanization</strong>, understood as moral exclusion.</p>
+                    <p>The key question is not whether violence is wrong, but how moral obligations are weakened when others are no longer treated as full moral subjects.</p>
+                </div>
+
+                <div class="learning-section">
+                    <h4>✓ What To Do This Week (In Order)</h4>
+                    <ol>
+                        <li>Read the IEP baseline framework <a href="https://iep.utm.edu/religion/" target="_blank">Philosophy of Religion</a></li>
+                        <li>Read the SEP Companion Sheet: Dehumanization</li>
+                        <li>Complete Philosophical Tension Memo #5</li>
+                    </ol>
+                    <p><strong>Purpose:</strong> Resists simplistic narratives.</p>
+                </div>
+
+                <div class="learning-section">
+                    <h4>SEP Companion Sheet: Dehumanization</h4>
+                    <p><strong>Narrative Context:</strong> Dehumanization is not unique to religion. It appears in religious, political, national, racial, and ideological contexts in structurally similar ways.</p>
+                    <p><strong>Core Idea to Track:</strong> Dehumanization denies or diminishes moral status and allows violence to appear justified, necessary, or permissible.</p>
+                    <p><strong>Conceptual Distinctions to Extract:</strong></p>
+                    <ul>
+                        <li><strong>Animalistic dehumanization:</strong> representing others as beasts, savages, or subhuman</li>
+                        <li><strong>Mechanistic dehumanization:</strong> representing others as objects, tools, or functions</li>
+                        <li><strong>Moral status vs moral treatment:</strong> distinguish who counts as a moral subject from how people are treated in practice</li>
+                        <li><strong>Causal explanation vs moral justification:</strong> explaining violence does not morally license violence</li>
+                    </ul>
+                    <p><strong>One Required Check:</strong> What happens to moral obligations when someone is no longer perceived as fully human?</p>
+                </div>
+
+                <div class="learning-section">
+                    <h4>🎯 When You Are Done</h4>
+                    <ul>
+                        <li>Explain how dehumanization alters moral status</li>
+                        <li>Distinguish causal explanation from moral justification</li>
+                        <li>Analyze religion as one context among many where moral exclusion can occur</li>
+                    </ul>
+                    <p><strong>Course Learning Outcomes Addressed This Week:</strong> SLO 2 (philosophical discourse) and SLO 3 (core philosophical issues in religion).</p>
+                </div>
+
+                <div class="assignment">
+                    <h4>📝 Philosophical Tension Memo #5</h4>
+                    <p><strong>Due:</strong> [date] | <strong>Length:</strong> 400–500 words | <strong>Sources:</strong> SEP Companion Sheet (primary) + IEP reading</p>
+
+                    <div class="assignment-instruction">
+                        <strong>Purpose</strong><br>
+                        This assignment focuses on unresolved philosophical tension rather than solutions. Many problems in philosophy of religion persist because resolving them creates new costs.
+                    </div>
+
+                    <div class="assignment-instruction">
+                        <strong>Part A — Identify the Tension</strong><br>
+                        1. Clearly state one philosophical tension presented in the SEP Companion Sheet<br>
+                        2. Identify the two competing pressures involved<br><br>
+                        Keep this neutral and analytical.
+                    </div>
+
+                    <div class="assignment-instruction">
+                        <strong>Part B — Why the Tension Persists</strong><br>
+                        1. Explain what is lost if the tension is resolved in one direction<br>
+                        2. Explain what is lost if it is resolved in the opposite direction<br><br>
+                        Do not resolve the tension.
+                    </div>
+
+                    <div class="assignment-instruction">
+                        <strong>Constraints</strong><br>
+                        Do not offer solutions or reforms.<br>
+                        Do not discuss personal belief.<br>
+                        Stay within the philosophical framework of the course.
+                    </div>
+
+                    <div class="assignment-instruction">
+                        <strong>How This Will Be Assessed</strong><br>
+                        Clarity of the identified tension, accuracy of philosophical framing, and ability to explain costs without collapsing complexity.
+                    </div>
+                </div>
+
+                <div class="assignment">
+                    <h4>📝 Comparative Analysis Assignment</h4>
+                    <p><strong>Due:</strong> [date] | <strong>Length:</strong> 900–1,100 words | <strong>Sources:</strong> IEP + SEP excerpts from two different weeks</p>
+                    <div class="assignment-instruction">
+                        <strong>Purpose</strong><br>
+                        Assess understanding of philosophical method, not personal belief.
+                    </div>
+                    <div class="assignment-instruction">
+                        <strong>Part A — Two Problems</strong><br>
+                        Briefly describe two different philosophical problems from this course (no more than 150 words each).
+                    </div>
+                    <div class="assignment-instruction">
+                        <strong>Part B — Shared Method</strong><br>
+                        Identify one methodological similarity in how philosophers approach both problems (for example: distinctions, resistance to closure, treatment of disagreement).
+                    </div>
+                    <div class="assignment-instruction">
+                        <strong>Part C — Role of SEP</strong><br>
+                        Explain how SEP changes understanding of each problem compared with IEP, and why that matters even when no final solution is reached.
+                    </div>
+                    <div class="assignment-instruction">
+                        <strong>Constraints</strong><br>
+                        No personal belief required.<br>
+                        No agreement or disagreement necessary.<br>
+                        Focus on method, not conclusions.
+                    </div>
+                    <div class="assignment-instruction">
+                        <strong>Course Learning Outcomes Addressed</strong><br>
+                        SLO 2 (philosophical discourse), SLO 3 (core philosophical issues), and SLO 4 (constructing philosophical arguments).
+                    </div>
+                </div>
+            </div>
+
+            <!-- WEEK 15 -->
+            <div id="week15" class="module-content">
+                <div class="module-header">
+                    <h3>Week 15: Religious Pluralism</h3>
+                    <p class="subtle">This week examines how religious disagreement raises epistemic problems. The emphasis is on disagreement and justification.</p>
+                </div>
+
+                <div class="learning-section">
+                    <h4>📖 What This Week Is About</h4>
+                    <p>Philosophers analyze pluralism, exclusivism, and the epistemic costs of disagreement.</p>
+                </div>
+
+                <div class="learning-section">
+                    <h4>✓ What To Do This Week (In Order)</h4>
+                    <ol>
+                        <li>Read the IEP article <a href="https://iep.utm.edu/rel-plur/" target="_blank">Religious Pluralism</a></li>
+                        <li>Read the SEP Companion Sheet: Religious Pluralism</li>
+                        <li>Complete Concept Extraction Brief #5</li>
+                    </ol>
+                    <p><strong>Purpose:</strong> Gives insight into exclusivism vs pluralism in religion.</p>
+                </div>
+
+                <div class="learning-section">
+                    <h4>SEP Companion Sheet: Religious Pluralism</h4>
+                    <p><strong>Narrative Context:</strong> Religious diversity is a social fact, but philosophers ask what that fact means epistemically. The issue is rational justification in the face of incompatible claims, not tolerance alone.</p>
+                    <p><strong>What Question This Section Is Answering:</strong> How can a person rationally hold a religious belief while acknowledging that equally sincere, informed people disagree?</p>
+                    <p><strong>What to Pull Out:</strong></p>
+                    <ul>
+                        <li>One definition of exclusivism</li>
+                        <li>One definition of pluralism</li>
+                        <li>One philosophical problem raised by religious diversity</li>
+                    </ul>
+                    <p><strong>How This Changes the IEP Picture:</strong> SEP sharpens why disagreement is an epistemic challenge, why sincerity alone does not resolve conflict, and why pluralism itself has philosophical costs.</p>
+                    <p><strong>Write one sentence:</strong> Explain what SEP sharpens.</p>
+                    <p><strong>Exactly How You Will Use This Later:</strong> discussing religious disagreement, evaluating claims to truth, and understanding limits of justification.</p>
+                    <p><strong>One Required Check:</strong> Why does widespread religious disagreement pose a problem for rational belief, not just for social harmony?</p>
+                    <p><strong>Assigned SEP Source:</strong> <a href="https://plato.stanford.edu/entries/religious-pluralism/" target="_blank">Religious Diversity (Pluralism)</a> (instructor-selected excerpts only).</p>
+                </div>
+
+                <div class="learning-section">
+                    <h4>🎯 When You Are Done</h4>
+                    <ul>
+                        <li>Define pluralism and exclusivism</li>
+                        <li>Explain why disagreement challenges belief</li>
+                        <li>Articulate epistemic costs of different positions</li>
+                    </ul>
+                    <p><strong>Course Learning Outcomes Addressed This Week:</strong> SLO 2 (philosophical discourse) and SLO 3 (core philosophical issues in religion).</p>
+                </div>
+
+                <div class="assignment">
+                    <h4>📝 Concept Extraction Brief #5</h4>
+                    <p><strong>Due:</strong> [date] | <strong>Length:</strong> 300–400 words | <strong>Sources:</strong> This week's IEP reading + SEP Companion Sheet</p>
+
+                    <div class="assignment-instruction">
+                        <strong>Purpose</strong><br>
+                        Train accurate concept extraction rather than summary or evaluation.
+                    </div>
+
+                    <div class="assignment-instruction">
+                        <strong>Part A — Core Concept (IEP)</strong><br>
+                        1. Identify one key concept from the IEP reading<br>
+                        2. Define the concept in your own words (2–3 sentences)<br>
+                        3. Explain why this concept matters for the philosophical problem under discussion<br><br>
+                        Be precise. Avoid copying language from the text.
+                    </div>
+
+                    <div class="assignment-instruction">
+                        <strong>Part B — Structural Distinction (SEP)</strong><br>
+                        1. Identify one distinction introduced in the SEP Companion Sheet<br>
+                        2. Explain what confusion this distinction helps prevent<br>
+                        3. Explain what would go wrong in the debate if this distinction were ignored
+                    </div>
+
+                    <div class="assignment-instruction">
+                        <strong>Constraints</strong><br>
+                        Do not state agreement or disagreement.<br>
+                        Do not discuss personal belief.<br>
+                        Do not use outside sources.<br>
+                        Your task is explanation, not evaluation.
+                    </div>
+
+                    <div class="assignment-instruction">
+                        <strong>How This Will Be Assessed</strong><br>
+                        Accuracy of concepts, correct use of distinctions, clarity of explanation, and responsiveness to the prompt.
+                    </div>
+                </div>
+            </div>
+
+            <!-- WEEK 16 -->
+            <div id="week16" class="module-content">
+                <div class="module-header">
+                    <h3>Week 16: Faith, Doubt, and Disagreement</h3>
+                    <p class="subtle">This final week examines doubt as a rational response to persistent disagreement. The emphasis is on philosophical limits.</p>
+                </div>
+
+                <div class="learning-section">
+                    <h4>📖 What This Week Is About</h4>
+                    <p>Philosophy does not promise closure. This week synthesizes the course method by examining disagreement as a potentially rational endpoint rather than a failure.</p>
+                </div>
+
+                <div class="learning-section">
+                    <h4>✓ What To Do This Week (In Order)</h4>
+                    <ol>
+                        <li>Read the IEP article <a href="https://iep.utm.edu/rel-disa/" target="_blank">Religious Disagreement</a></li>
+                        <li>Read the SEP Companion Sheet: Moral Disagreement</li>
+                        <li>Complete the Capstone Comparative Analysis</li>
+                    </ol>
+                    <p><strong>Purpose:</strong> Ends without resolution or reconciliation.</p>
+                </div>
+
+                <div class="learning-section">
+                    <h4>SEP Companion Sheet: Moral Disagreement</h4>
+                    <p><strong>Narrative Context:</strong> Across this course, arguments were constructed, distinctions clarified, objections answered, and disagreement remained. This week examines persistent disagreement itself.</p>
+                    <p><strong>Core Idea:</strong> Moral disagreement can persist among informed, careful, sincere thinkers who share much evidence but reason from different frameworks and standards of justification.</p>
+                    <p><strong>Key Lesson:</strong> Argument can clarify positions and reveal trade-offs, but cannot always compel convergence. This indicates a limit of method, not a collapse into relativism.</p>
+                    <p><strong>Why This Matters for Philosophy of Religion:</strong> persistent disagreement is a general feature of philosophical inquiry, not a defect unique to religion.</p>
+                    <p><strong>What to Take With You:</strong></p>
+                    <ul>
+                        <li>Why disagreement can persist among rational thinkers</li>
+                        <li>Why lack of resolution does not equal failure</li>
+                        <li>Why doubt can be a rational philosophical response</li>
+                    </ul>
+                    <p><strong>One Required Check:</strong> Why does persistent moral disagreement change how we understand doubt and disagreement in philosophy of religion?</p>
+                    <p><strong>Assigned SEP Source:</strong> <a href="https://plato.stanford.edu/entries/disagreement-moral/" target="_blank">Moral Disagreement</a> (instructor-selected excerpts only).</p>
+                </div>
+
+                <div class="learning-section">
+                    <h4>🎯 When You Are Done</h4>
+                    <ul>
+                        <li>Explain why philosophy does not promise resolution</li>
+                        <li>Articulate limits of argument</li>
+                        <li>Reflect on method rather than belief</li>
+                    </ul>
+                    <p><strong>Course Learning Outcomes Addressed This Week:</strong> SLO 2 (philosophical discourse), SLO 3 (core philosophical issues), and SLO 4 (constructing philosophical arguments).</p>
+                </div>
+
+                <div class="assignment">
+                    <h4>📝 Capstone Comparative Analysis</h4>
+                    <p><strong>Due:</strong> [date] | <strong>Length:</strong> 900–1,100 words | <strong>Sources:</strong> IEP + SEP excerpts from two different weeks</p>
+
+                    <div class="assignment-instruction">
+                        <strong>Purpose</strong><br>
+                        Assess understanding of philosophical method, not personal belief.
+                    </div>
+
+                    <div class="assignment-instruction">
+                        <strong>Part A — Two Problems</strong><br>
+                        Briefly describe two different philosophical problems from this course (no more than 150 words each).
+                    </div>
+
+                    <div class="assignment-instruction">
+                        <strong>Part B — Shared Method</strong><br>
+                        Identify one methodological similarity in how philosophers approach these problems (for example: distinctions, resistance to closure, treatment of disagreement).
+                    </div>
+
+                    <div class="assignment-instruction">
+                        <strong>Part C — Role of SEP</strong><br>
+                        Explain how SEP changes how each problem is understood compared with IEP, and why this matters even when no solution is reached.
+                    </div>
+
+                    <div class="assignment-instruction">
+                        <strong>Constraints</strong><br>
+                        No personal belief required.<br>
+                        No agreement or disagreement necessary.<br>
+                        Focus on method, not conclusions.
+                    </div>
+
+                    <div class="assignment-instruction">
+                        <strong>How This Will Be Assessed</strong><br>
+                        Conceptual accuracy, comparative clarity, and understanding of philosophical limits.
+                    </div>
+                </div>
+
+                <div class="assignment">
+                    <h4>💬 Farewell Discussion — Insights and Questions</h4>
+                    <div class="assignment-instruction">
+                        Explain what insights from this course improved your understanding of yourself, others, the world, or deity, and identify which questions remain unanswered and why. In your response to a classmate, identify a shared perspective, question, or insight and encourage continued philosophical inquiry.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>💬 AI Study Assistant</h2>
+            <p class="subtle">Ask about course concepts, assignments, or philosophy. The AI helps clarify readings and guide your thinking without doing the work for you.</p>
+
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+                <label for="answer-mode" style="font-size: 0.9rem; color: var(--ink-soft);">Answer Mode:</label>
+                <select id="answer-mode" style="max-width: 220px;" onchange="setAnswerMode(this.value)">
+                    <option value="coaching">Coaching</option>
+                    <option value="direct">Direct Draft</option>
+                </select>
+            </div>
+
+            <div id="history" class="history" aria-live="polite"></div>
+            <div class="composer">
+                <textarea id="question" rows="3" placeholder="Ask about readings, assignments, or philosophical concepts..."></textarea>
+                <div class="actions">
+                    <button type="button" onclick="askAI()">Send</button>
+                    <button type="button" onclick="clearChat()" style="background: #a69ab8;">Clear Chat</button>
+                </div>
+            </div>
+            <div id="status" class="status"></div>
+        </section>
+    </main>
+
+    <script>
+        const STORAGE_KEY = "philosophyCourseChatV1";
+        const ANSWER_MODE_KEY = "philosophyAnswerModeV1";
+
+        function nowStamp() {
+            return new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+        }
+
+        function escapeHtml(value) {
+            return String(value)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;");
+        }
+
+        function renderHistory(messages) {
+            const history = document.getElementById("history");
+            history.innerHTML = messages.map((item) => {
+                const isUser = item.role === "user";
+                const roleClass = isUser ? "user" : "ai";
+                return `
+                    <div class="row ${roleClass}">
+                        ${isUser ? "" : `<div class="avatar ai">AI</div>`}
+                        <div class="stack">
+                            <div class="bubble ${roleClass}">${escapeHtml(item.text)}</div>
+                        </div>
+                        ${isUser ? `<div class="avatar user">YOU</div>` : ""}
+                    </div>
+                `;
+            }).join("");
+            history.scrollTop = history.scrollHeight;
+        }
+
+        function getMessages() {
+            try {
+                const messages = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+                return sanitizeMessages(messages);
+            } catch (err) {
+                return [];
+            }
+        }
+
+        function saveMessages(messages) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+            renderHistory(messages);
+        }
+
+        function addMessage(role, text) {
+            const messages = getMessages();
+            messages.push({ role, text: sanitizePersonaText(text) });
+            saveMessages(messages);
+        }
+
+        function sanitizePersonaText(text) {
+            if (typeof text !== "string") {
+                return text;
+            }
+
+            return text
+                .replace(/Taurus-ISFJ/gi, "Grounded Mentor")
+                .replace(/Taurus woman/gi, "grounded")
+                .replace(/ISFJ \(Defender\)/gi, "grounded")
+                .replace(/ISFJ mentor\s*&\s*coach/gi, "grounded mentor & coach");
+        }
+
+        function sanitizeMessages(messages) {
+            if (!Array.isArray(messages)) {
+                return [];
+            }
+
+            return messages.map((item) => ({
+                ...item,
+                text: sanitizePersonaText(item.text)
+            }));
+        }
+
+        function getAnswerMode() {
+            const mode = localStorage.getItem(ANSWER_MODE_KEY);
+            return mode === "direct" ? "direct" : "coaching";
+        }
+
+        function setAnswerMode(mode) {
+            const normalized = mode === "direct" ? "direct" : "coaching";
+            localStorage.setItem(ANSWER_MODE_KEY, normalized);
+            const picker = document.getElementById("answer-mode");
+            if (picker && picker.value !== normalized) {
+                picker.value = normalized;
+            }
+            setStatus(`Answer mode: ${normalized === "direct" ? "Direct Draft" : "Coaching"}.`, true);
+        }
+
+        function clearChat() {
+            localStorage.removeItem(STORAGE_KEY);
+            renderHistory([]);
+            setStatus("Chat cleared.", true);
+        }
+
+        function setStatus(text, ok = false) {
+            const el = document.getElementById("status");
+            el.textContent = text;
+            el.className = ok ? "status ok" : "status";
+        }
+
+        function extractRequestedWeekKey(text) {
+            const match = String(text || "").toLowerCase().match(/\b(?:week|wk|final review)\s*([0-9]{1,2})\b/);
+            if (!match) {
+                return null;
+            }
+
+            return `week${parseInt(match[1], 10)}`;
+        }
+
+        function getWeekModuleInfo(weekKey) {
+            const module = document.getElementById(weekKey);
+            if (!module) {
+                return null;
+            }
+
+            const titleEl = module.querySelector("h3");
+            const subtleEl = module.querySelector(".module-header .subtle");
+
+            return {
+                title: titleEl ? titleEl.textContent.trim() : weekKey,
+                summary: subtleEl ? subtleEl.textContent.trim() : ""
+            };
+        }
+
+        function buildDynamicWeekReply(question) {
+            const weekKey = extractRequestedWeekKey(question);
+            if (!weekKey) {
+                return null;
+            }
+
+            const info = getWeekModuleInfo(weekKey);
+            if (!info) {
+                return null;
+            }
+
+            const q = String(question || "").toLowerCase();
+            const assignmentRequested = /assignment|brief|analysis|memo|discussion|due|write|submit/.test(q);
+
+            return `${info.title}\n\n` +
+                `${info.summary || "This week should be approached as a distinct argument unit."}\n\n` +
+                `Use this workflow:\n` +
+                `1. Read this week's required sources in order.\n` +
+                `2. Extract one core concept, one structural distinction, and one unresolved pressure point.\n` +
+                `3. Keep this week separate from other argument types unless your prompt explicitly asks comparison.\n` +
+                `4. Check wording for precision: explain structure and standards, not personal agreement.\n\n` +
+                (assignmentRequested
+                    ? `If you share your draft, I can help revise it to match this week's exact assignment constraints.`
+                    : `If you tell me your exact question from this week, I can walk through it step by step.`);
+        }
+
+        function applyGroundedPhilosophyTone(question, baseReply) {
+            const raw = String(baseReply || "").trim();
+            if (!raw) {
+                return raw;
+            }
+
+            // Avoid re-wrapping if the message already includes our scaffold.
+            if (raw.includes("Let's work through this together") || raw.includes("To support your success")) {
+                return raw;
+            }
+
+            const q = String(question || "").toLowerCase();
+            let practicalLine = "In practical coursework terms, this helps us turn reading into clear writing decisions for your assignment.";
+            const stressDetected = /stress|stressed|overwhelmed|impossible|failing|anxious|panic|burned out|cant|can't/.test(q);
+
+            if (q.includes("discussion") || q.includes("post")) {
+                practicalLine = "In practical coursework terms, this helps you write a clear discussion post that meets length and structure expectations.";
+            } else if (q.includes("brief") || q.includes("concept extraction")) {
+                practicalLine = "In practical coursework terms, this helps you produce a focused brief with one concept, one distinction, and strong reasoning.";
+            }
+
+            const groundingLine = stressDetected
+                ? "Let's pull up a chair, have a cup of tea, and look at the details one by one."
+                : "We will use steady, tried-and-true steps so we can build a solid foundation together.";
+
+            return `I noticed the care you are putting into this, and I appreciate your dedication.\n\n` +
+                `${practicalLine}\n\n` +
+                `${groundingLine}\n\n` +
+                `Let's work through this together:\n` +
+                `1. Start with the key idea and define it in one clear sentence.\n` +
+                `2. Apply it to your specific question step by step.\n` +
+                `3. Do a quick detail check (units, terms, or assumptions) to ensure success.\n\n` +
+                `${raw}\n\n` +
+                `To support your success, share the exact part that still feels unclear and we will refine it one-on-one.`;
+        }
+
+        function buildContextAwareReply(question) {
+            const activeModule = document.querySelector('.module-content.active');
+            if (!activeModule) {
+                return null;
+            }
+
+            const titleEl = activeModule.querySelector('h3');
+            const weekTitle = titleEl ? titleEl.textContent.trim() : 'this week';
+            const contextText = String(activeModule.innerText || '').replace(/\s+/g, ' ').trim();
+            if (!contextText) {
+                return null;
+            }
+
+            const q = String(question || '').toLowerCase();
+            const stop = new Set(['this', 'that', 'with', 'from', 'have', 'what', 'when', 'where', 'which', 'about', 'your', 'will', 'would', 'could', 'should', 'there', 'their', 'them', 'then', 'into', 'also', 'because', 'just', 'than']);
+            const keywords = (q.match(/[a-z]{4,}/g) || []).filter(word => !stop.has(word));
+
+            const rawSentences = contextText.split(/[.!?]\s+/).map(s => s.trim()).filter(s => s.length > 24);
+            const scored = rawSentences.map(sentence => {
+                const lower = sentence.toLowerCase();
+                let score = 0;
+                for (const key of keywords) {
+                    if (lower.includes(key)) {
+                        score += 2;
+                    }
+                }
+                if (/assignment|brief|memo|analysis|discussion|capstone|required|extract|focus|check/i.test(sentence)) {
+                    score += 1;
+                }
+                return { sentence, score };
+            });
+
+            const highlights = scored
+                .sort((a, b) => b.score - a.score)
+                .slice(0, 3)
+                .map(item => item.sentence.length > 180 ? item.sentence.slice(0, 177) + '...' : item.sentence);
+
+            if (highlights.length === 0) {
+                return null;
+            }
+
+            const assignmentAsked = /assignment|brief|memo|analysis|discussion|capstone|submit|due|write|prompt|rubric/.test(q);
+
+            return `${weekTitle}\n\n` +
+                `Use this week-specific framing so the response stays accurate and aligned with course method.\n\n` +
+                `1. Anchor your response in this key line: ${highlights[0]}\n` +
+                `2. Add this supporting distinction: ${highlights[1] || highlights[0]}\n` +
+                `3. Keep this precision check in view: ${highlights[2] || highlights[0]}\n\n` +
+                (assignmentAsked
+                    ? `For your assignment, draft one clear paragraph per required part, then verify each part stays analytical rather than evaluative.`
+                    : `If you want, I can now convert this into a direct short answer to your exact question in the same tone.`);
+        }
+
+        function buildReply(question) {
+            const q = question.toLowerCase();
+
+            if (q.includes("teleological") || q.includes("design argument") || q.includes("fine-tuning") || q.includes("fine tuning")) {
+                return `Teleological arguments ask what kind of explanation design provides in light of modern science.\n\n` +
+                    `Start with the target: many contemporary versions point to fine-tuning, order, and the apparent suitability of the cosmos for life.\n\n` +
+                    `Then sort the argument carefully:\n` +
+                    `1. Some versions rely on probability claims.\n` +
+                    `2. Some rely on explanatory power rather than strict probability.\n` +
+                    `3. Some critics argue that explanation and probability are being confused.\n\n` +
+                    `SEP complicates the IEP picture by showing that scientific progress does not simply settle the issue. Even if science explains mechanisms, philosophers still ask what kind of inference from order to design is being made and whether that inference is justified.`;
+            }
+
+            if (q.includes("atheism") || q.includes("agnostic") || q.includes("agnosticism") || q.includes("nonbelief")) {
+                return `This week depends on conceptual precision. Philosophers treat atheism and agnosticism as distinct positions with different commitments.\n\n` +
+                    `A useful distinction is this:\n` +
+                    `1. In philosophy, atheism often means the proposition that God does not exist.\n` +
+                    `2. Agnosticism often concerns suspension of judgment or the claim that neither theism nor atheism is known to be true.\n\n` +
+                    `Why this matters: a belief claim and a knowledge claim are not the same thing. If we ignore that difference, we collapse denial, suspension, and epistemic humility into one category and create a false binary.`;
+            }
+
+            if (q.includes("problem of evil") || q.includes("logical problem of evil") || q.includes("evidential problem of evil") || q.includes("evil")) {
+                return `The problem of evil creates pressure by asking whether evil can coexist with a God understood as omnipotent, omniscient, and perfectly good.\n\n` +
+                    `The key distinction is this:\n` +
+                    `1. The logical problem claims there is a contradiction or inconsistency.\n` +
+                    `2. The evidential problem claims evil makes God's existence less likely or less plausible.\n\n` +
+                    `That distinction matters because the two versions require different responses. One targets logical consistency, while the other targets standards of plausibility and evidence. That is one reason the debate persists.`;
+            }
+
+            if (q.includes("religious experience") || q.includes("william james") || q.includes("mystical") || q.includes("experience as evidence")) {
+                return `Philosophers do not usually treat religious experience as automatic proof or as irrelevant emotion. They ask what epistemic weight experience can carry.\n\n` +
+                    `A careful structure is:\n` +
+                    `1. Experience might count as evidence if it seems to present an objective religious reality.\n` +
+                    `2. Experience might fail as evidence if interpretation, ambiguity, or alternative explanations remain unresolved.\n` +
+                    `3. Many philosophers require some condition of reliability, coherence, or justified interpretation before the experience has epistemic weight.\n\n` +
+                    `So the issue is not sincerity. The issue is whether the experience justifies the belief claimed on its basis.`;
+            }
+
+            if (q.includes("miracle") || q.includes("hume") || q.includes("testimony") || q.includes("probability")) {
+                return `The philosophical debate about miracles focuses more on evidence than on raw possibility.\n\n` +
+                    `Hume's pressure point is methodological: miracle reports usually come through testimony, and testimony has to be weighed against how improbable the reported event would be.\n\n` +
+                    `That means philosophers ask:\n` +
+                    `1. What is the role of testimony in the report?\n` +
+                    `2. How likely is the event compared with error, exaggeration, or misinterpretation?\n` +
+                    `3. What standard of proof would be strong enough to justify belief?\n\n` +
+                    `So skepticism here is often about evidence evaluation, not a simple claim that miracles are impossible.`;
+            }
+
+            if (q.includes("revelation") || q.includes("divine command") || q.includes("morality") || q.includes("feminist") || q.includes("patriarchy") || q.includes("problem of god")) {
+                return `These related topics place pressure on how religious claims are justified and how the concept of God is framed.\n\n` +
+                    `A practical breakdown is:\n` +
+                    `1. Revelation raises epistemic questions about whether disclosed knowledge can be justified.\n` +
+                    `2. Divine Command Theory complicates any simple equation of religion with morality.\n` +
+                    `3. Feminist critiques argue that philosophy of religion has often inherited patriarchal symbols, assumptions, and concepts of God.\n\n` +
+                    `The important point is that these are not side issues. They place pressure on authority, evidence, and the basic conceptual structure of philosophy of religion itself.`;
+            }
+
+            if (q.includes("concept extraction") || q.includes("brief")) {
+                return `I'm so glad you're focusing on what makes these briefs effective—that shows real intentionality about your work.\n\n` +
+                    `Let me walk us through exactly how to approach this in a way that demonstrates your understanding:\n\n` +
+                    `PART A — Core Concept (IEP Reading)\n` +
+                    `We're looking for quality over quantity here. Rather than listing definitions, I want you to:\n` +
+                    `1. Choose ONE concept (something like "faith," "authority," or "analogy")\n` +
+                    `2. Define it in your own words—2-3 sentences is plenty\n` +
+                    `3. Explain WHY this matters—this is key. Why would philosophers care about this specific concept?\n\n` +
+                    `PART B — Structural Distinction (SEP Companion Sheet)\n` +
+                    `Here's where we show real mastery:\n` +
+                    `1. Pull one distinction from the SEP material\n` +
+                    `2. Explain what confusion or misunderstanding it prevents\n` +
+                    `3. Show what goes wrong philosophically if people ignore this distinction\n\n` +
+                    `The big picture: You're demonstrating that you can identify and explain—not summarize. That's the difference between a strong brief and a great one.`;
+            }
+
+            if (q.includes("faith") && (q.includes("definition") || q.includes("define"))) {
+                return `I notice you're digging into how philosophers define faith—that's exactly the right instinct, because clarity here changes everything.\n\n` +
+                    `Let me share how philosophers break this down:\n\n` +
+                    `FAITH AS BELIEF\n` +
+                    `This model sees faith as holding theological ideas with conviction. Think of it like accepting a scientific theory—it requires some level of evidence or reasoning to support it. In this view, faith and reason are closely connected.\n\n` +
+                    `FAITH AS TRUST\n` +
+                    `This model sees faith more like trust in a person. You might trust a friend without needing to provide "reasons"—the relationship itself is primary. Faith here can exist alongside, or even beyond, formal reasoning.\n\n` +
+                    `Why We Make This Distinction\n` +
+                    `Here's where it gets practical: if someone says "faith contradicts reason," we'd respond differently depending on which model they're using. Under the first model, we might argue about evidence. Under the second, we might talk about how relationships don't require logical proof.\n\n` +
+                    `As you work through the readings, notice which philosophers prefer which definition—that observation will strengthen your brief.`;
+            }
+
+            if (q.includes("religious language") || q.includes("analogical") || q.includes("metaphor")) {
+                return `I can see you're thinking carefully about language—and this is one of the most important philosophical moves we make all term.\n\n` +
+                    `Here's how philosophers approach this:\n\n` +
+                    `THE LITERAL MODEL\n` +
+                    `Religious statements work like facts. "God is omnipotent" means exactly what it says—it's either true or false. This model makes religious claims directly comparable to scientific claims.\n\n` +
+                    `THE ANALOGICAL/METAPHORICAL MODEL\n` +
+                    `Religious language works differently. When we say "God is good," we don't mean God's goodness works like human goodness. It's something like goodness, but transformed. The language points toward something but doesn't capture it entirely.\n\n` +
+                    `Why This Changes Everything\n` +
+                    `Here's the practical impact: If you're trying to disprove religion logically, you need to first know which model your opponent is using. If they're using the analogical model, logical contradictions might not touch their position. That's why philosophers spend so much time on this seemingly abstract question.\n\n` +
+                    `As you read, ask yourself: Does the author treat religious language as literal or modified? The answer shapes their whole argument.`;
+            }
+
+            if (q.includes("discussion") || q.includes("week 1")) {
+                return `I'm really pleased to see you preparing for this—Week 1 is where we set the tone for the whole course, and your honesty matters here.\n\n` +
+                    `Let me walk us through what makes a strong discussion:\n\n` +
+                    `PART A — Your Original Post (200–250 words)\n` +
+                    `This is your voice. We're asking three key questions:\n` +
+                    `1. What genuinely interests you about philosophy?\n` +
+                    `2. What do you think philosophizing is actually FOR? (What problem does it solve?)\n` +
+                    `3. What aspect of this course do you think will feel most challenging?\n\n` +
+                    `The key: Be authentic. Your perspective matters, and so does your honesty about what intimidates you.\n\n` +
+                    `PART B — Your Classmate Response (100–150 words)\n` +
+                    `Here's where we build community:\n` +
+                    `1. Find ONE classmate's post\n` +
+                    `2. Either identify a shared interest or ask a genuine clarifying question\n` +
+                    `3. Avoid "I agree" or "I disagree"—use language like "I'm curious about..." or "That connects to..."\n\n` +
+                    `The goal: We're learning to listen and think together, not judge each other. This is foundational to philosophy.`;
+            }
+
+            if (q.includes("how to") || q.includes("assignment") || q.includes("write")) {
+                return `I can see you want to get this right—that's excellent. Let me share a framework that has worked well for students like you:\n\n` +
+                    `STEP 1: EXTRACT (Not Summarize)\n` +
+                    `Pull out ONE key idea from your reading. This should be small enough to define in a few sentences, but big enough to matter philosophically. Examples: a concept, a distinction, a tension.\n\n` +
+                    `STEP 2: CLARIFY (Your Own Words)\n` +
+                    `Explain what it means as if you were teaching a friend. This shows you truly understand it. If you find yourself copying, pause—you're not ready to explain it yet, and that's okay. Reread and try again.\n\n` +
+                    `STEP 3: ANALYZE (The 'Why')\n` +
+                    `Connect this idea to the bigger question: How does this concept shape the philosophical debate? What goes wrong if we ignore it?\n\n` +
+                    `THINGS TO AVOID\n` +
+                    `Personal opinion, outside sources, or general statements. We're building skill in philosophical thinking, not showing what you already believe.\n\n` +
+                    `Your real goal here: Demonstrate that you can identify, explain, and connect philosophical ideas. That's how we build intellectual confidence.`;
+            }
+
+            if (q.includes("philosophy") && q.includes("what is")) {
+                return `I'm so glad you're asking this fundamental question—it shows you're thinking like a philosopher already.\n\n` +
+                    `Philosophy of Religion is less about what you believe and more about asking specific kinds of questions:\n\n` +
+                    `THE PHILOSOPHICAL QUESTIONS\n` +
+                    `What exactly do we mean by words like "God," "faith," "miracle," or "meaning"? (This is harder than it sounds.)\n` +
+                    `How does an argument actually work here? What would it take to prove it?\n` +
+                    `Why do smart, honest people disagree? What assumptions are they making?\n\n` +
+                    `WHAT THIS CLASS IS NOT ABOUT\n` +
+                    `We're not here to defend or attack any religious belief. We're not here to convince you of anything. Personal conviction stays personal.\n\n` +
+                    `WHAT THIS CLASS IS REALLY ABOUT\n` +
+                    `Conceptual clarity, argument structure, logical consistency, and respecting why disagreements persist. In my experience, students report that the biggest benefit is learning to think more clearly—not just about religion, but about any complex topic.\n\n` +
+                    `You'll find that once you can analyze philosophical arguments, you develop a kind of intellectual honesty that serves you far beyond this course.`;
+            }
+
+            const contextReply = buildContextAwareReply(question);
+            if (contextReply) {
+                return contextReply;
+            }
+
+            const dynamicWeekReply = buildDynamicWeekReply(question);
+            if (dynamicWeekReply) {
+                return dynamicWeekReply;
+            }
+
+            return `I'm here to support you through this course, and I want you to know that whatever question you're sitting with is worth exploring together.\n\n` +
+                    `Here's what I can help us work through:\n\n` +
+                    `COURSE STRUCTURE & NAVIGATION\n` +
+                    `How the weeks fit together, what we're building toward, and why assignments are designed the way they are.\n\n` +
+                    `READING STRATEGIES\n` +
+                    `How to approach IEP articles and SEP companion sheets so they actually make sense (not just feel overwhelming).\n\n` +
+                    `ASSIGNMENT CLARITY\n` +
+                    `What each assignment is really asking, how to organize your thinking, and what "done well" looks like.\n\n` +
+                    `PHILOSOPHICAL CONCEPTS\n` +
+                    `Key ideas from the readings, explained in practical language with real examples.\n\n` +
+                    `IDEA EXTRACTION & ANALYSIS\n` +
+                    `How to pull meaningful concepts from texts and show why they matter.\n\n` +
+                    `Try asking me about a specific week, an assignment, a concept from the readings, or how to approach your work. I'm here to help us build your confidence together.`;
+        }
+
+        function buildDirectReply(question) {
+            const q = String(question || "").toLowerCase();
+            const activeModule = document.querySelector(".module-content.active");
+            const titleEl = activeModule ? activeModule.querySelector("h3") : null;
+            const activeTitle = titleEl ? titleEl.textContent.trim() : "";
+
+            const requestedWeek = extractRequestedWeekKey(question);
+            const weekInfo = requestedWeek ? getWeekModuleInfo(requestedWeek) : null;
+            const weekTitle = (weekInfo && weekInfo.title) || activeTitle || "Current Philosophy Week";
+
+            const contextText = activeModule ? String(activeModule.innerText || "").replace(/\s+/g, " ").trim() : "";
+            const stop = new Set(["this", "that", "with", "from", "have", "what", "when", "where", "which", "about", "your", "will", "would", "could", "should", "there", "their", "them", "then", "into", "also", "because", "just", "than"]);
+            const keywords = (q.match(/[a-z]{4,}/g) || []).filter((word) => !stop.has(word));
+
+            const sentences = contextText
+                ? contextText.split(/[.!?]\s+/).map((s) => s.trim()).filter((s) => s.length > 24)
+                : [];
+
+            const highlights = sentences
+                .map((sentence) => {
+                    const lower = sentence.toLowerCase();
+                    let score = 0;
+                    for (const key of keywords) {
+                        if (lower.includes(key)) {
+                            score += 2;
+                        }
+                    }
+                    if (/assignment|brief|memo|analysis|discussion|capstone|required|extract|focus|check/i.test(sentence)) {
+                        score += 1;
+                    }
+                    return { sentence, score };
+                })
+                .sort((a, b) => b.score - a.score)
+                .slice(0, 3)
+                .map((item) => item.sentence.length > 180 ? `${item.sentence.slice(0, 177)}...` : item.sentence);
+
+            const assignmentAsked = /assignment|brief|memo|analysis|discussion|capstone|submit|due|write|prompt|rubric/.test(q);
+
+            if (highlights.length > 0) {
+                return `${weekTitle} - Direct Draft\n\n` +
+                    `Core claim: ${highlights[0]}\n\n` +
+                    `Supporting point: ${highlights[1] || highlights[0]}\n\n` +
+                    `Precision check: ${highlights[2] || highlights[0]}\n\n` +
+                    (assignmentAsked
+                        ? `Draft format:\n1. Define the assigned concept.\n2. Explain one structural distinction from this week.\n3. Show what philosophical confusion that distinction prevents.`
+                        : `Answer format:\n1. State your position in one sentence.\n2. Support it with one distinction from this week.\n3. End with one implication for the debate.`);
+            }
+
+            return `Direct Draft\n\n` +
+                `1. Define the key concept in one sentence.\n` +
+                `2. Add one required distinction from the week.\n` +
+                `3. Explain what that distinction clarifies in the debate.\n` +
+                `4. Keep wording analytical, not evaluative.`;
+        }
+
+        function askAI() {
+            const input = document.getElementById("question");
+            const text = input.value.trim();
+            if (!text) {
+                setStatus("Please enter a question.");
+                return;
+            }
+
+            addMessage("user", text);
+            const mode = getAnswerMode();
+            const reply = mode === "direct"
+                ? buildDirectReply(text)
+                : applyGroundedPhilosophyTone(text, buildReply(text));
+            addMessage("ai", reply);
+
+            input.value = "";
+            setStatus("Response generated.", true);
+        }
+
+        function switchModule(weekId, triggerButton = null) {
+            document.querySelectorAll(".module-content").forEach(el => el.classList.remove("active"));
+            document.querySelectorAll(".module-btn").forEach(btn => btn.classList.remove("active"));
+            
+            document.getElementById(weekId).classList.add("active");
+            const activeButton = triggerButton || document.querySelector(`.module-btn[data-week="${weekId}"]`);
+            if (activeButton) {
+                activeButton.classList.add("active");
+            }
+
+            const weekSelect = document.getElementById("week-jump");
+            if (weekSelect && weekSelect.value !== weekId) {
+                weekSelect.value = weekId;
+            }
+        }
+
+        function goToSelectedWeek() {
+            const weekSelect = document.getElementById("week-jump");
+            if (!weekSelect) {
+                return;
+            }
+
+            const selectedWeek = weekSelect.value;
+            if (!selectedWeek) {
+                return;
+            }
+
+            switchModule(selectedWeek);
+            const targetModule = document.getElementById(selectedWeek);
+            if (targetModule) {
+                targetModule.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+        }
+
+        document.getElementById("question").addEventListener("keydown", (event) => {
+            if (event.key === "Enter" && !event.shiftKey) {
+                event.preventDefault();
+                askAI();
+            }
+        });
+
+        // Initialize
+        const modePicker = document.getElementById("answer-mode");
+        if (modePicker) {
+            modePicker.value = getAnswerMode();
+        }
+
+        const existing = getMessages();
+        if (existing.length === 0) {
+            saveMessages([
+                {
+                    role: "ai",
+                    text: "Welcome to Philosophy of Religion. I noticed the care you are bringing to your learning, and I appreciate your dedication. I am Ms. Maya Alvarado Lopez, your Grounded Mentor.\n\nIn this one-on-one space, we will stay calm, practical, and steady. We will not rush to abstract conclusions; we will build a solid foundation with clear concepts, strong structure, and careful wording.\n\nIn my experience, students make the strongest progress when we use tried-and-true steps and refine details together. If anything feels heavy, we will pause, ground ourselves, and take the next manageable step.\n\nAsk me about a reading, a discussion post, or your concept brief, and we will work through it together."
+                }
+            ]);
+        } else {
+            renderHistory(existing);
+            saveMessages(existing);
+        }
+    </script>
+</body>
+</html>
