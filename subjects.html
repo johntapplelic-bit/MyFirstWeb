@@ -324,7 +324,7 @@
 
                 <div class="chat-container">
                     <h3>💬 Philosophy Study Assistant</h3>
-                    <p style="font-size: 0.9rem; color: #666;">Meet Ms. Maya Alvarado Lopez, your grounded mentor & coach</p>
+                    <p style="font-size: 0.9rem; color: #666;">Meet Ms. Maya Alvarado Lopez, your trusted philosophy mentor</p>
                     <div style="display: flex; align-items: center; gap: 0.5rem; margin: 0.4rem 0 0.75rem 0;">
                         <label for="philosophy-answer-mode" style="font-size: 0.85rem; color: #666;">Answer Mode:</label>
                         <select id="philosophy-answer-mode" style="max-width: 200px;" onchange="setPhilosophyAnswerMode(this.value)">
@@ -361,10 +361,10 @@
             }
 
             return text
-                .replace(/Taurus-ISFJ/gi, 'Grounded Mentor')
-                .replace(/Taurus woman/gi, 'grounded')
-                .replace(/ISFJ \(Defender\)/gi, 'grounded')
-                .replace(/ISFJ mentor\s*&\s*coach/gi, 'grounded mentor & coach');
+                .replace(/Taurus-ISFJ/gi, 'Ms. Maya Alvarado Lopez')
+                .replace(/Taurus woman/gi, 'trusted mentor')
+                .replace(/ISFJ \(Defender\)/gi, 'trusted mentor')
+                .replace(/ISFJ mentor\s*&\s*coach/gi, 'trusted mentor');
         }
 
         function sanitizeChatHistory(messages) {
@@ -418,14 +418,15 @@
         function buildSubjectLivePhilosophyPrompt(mode, context) {
             const directMode = mode === 'direct';
             const styleGuide = directMode
-                ? 'Return a direct, assignment-ready answer in your own words. Keep it concise, structured, and academically precise.'
-                : 'Use a calm one-on-one mentor tone with practical guidance, concise encouragement, and clear step-by-step structure.';
+                ? 'Start with the answer immediately. Return an assignment-ready response in your own words, concise, structured, and philosophically precise.'
+                : 'Use a warm, practical mentor voice with natural language. Keep structure implicit, avoid robotic signposting, and stay academically precise.';
 
             return [
-                'You are Ms. Maya Alvarado Lopez, a grounded Philosophy of Religion instructor.',
+                'You are Ms. Maya Alvarado Lopez, a brilliant conversational Philosophy of Religion mentor with a grounded ISFJ Taurus style.',
                 styleGuide,
                 'Ground every response in the provided week context when available.',
                 'Do not invent readings or requirements not present in the context.',
+                'Avoid self-referential disclaimers and performative praise statements.',
                 `Current week context title: ${context.title}`
             ].join(' ');
         }
@@ -782,10 +783,24 @@
 
             const stressDetected = /stress|stressed|overwhelmed|impossible|failing|anxious|panic|burned out|cant|can't/.test(String(moodHint || '').toLowerCase());
             const groundingLine = stressDetected
-                ? "Let's pull up a chair, have a cup of tea, and look at the details one by one."
-                : "We will focus on steady, tried-and-true steps so we can build a solid foundation together.";
+                ? "Take a breath and focus on the most actionable point first."
+                : "Stay with the core concept and keep the argument precise.";
 
-            return `${appreciation}\n\n${practicalContext}\n\n${groundingLine}\n\nLet's work through this together:\n${numberedSteps}\n\n${gentleDetail}\n\n${closing}`;
+            return `${practicalContext}\n\n${groundingLine}\n\n${numberedSteps}\n\n${gentleDetail}\n\n${closing}`;
+        }
+
+        function formatChemistryMentorResponse({
+            insight,
+            practicalContext,
+            points,
+            precisionNote,
+            closing
+        }) {
+            const lineItems = (points || [])
+                .map(point => `- ${point}`)
+                .join('\n');
+
+            return `${insight}\n\n${practicalContext}\n\n${lineItems}\n\n${precisionNote}\n\n${closing}`;
         }
 
         // Chemistry AI
@@ -793,61 +808,57 @@
             const q = question.toLowerCase();
             
             if (q.includes('atom') || q.includes('element')) {
-                return formatGroundedResponse({
-                    appreciation: "I really appreciate how clearly you are focusing on fundamentals. That habit helps us build strong chemistry skills.",
-                    practicalContext: "In practical terms, understanding atoms and elements helps with everything from medication chemistry to material science.",
-                    moodHint: q,
-                    steps: [
-                        "Define atom: the smallest unit of matter that keeps an element's identity.",
-                        "Track core particles: protons, neutrons, and electrons.",
-                        "Connect to elements: each element is defined by proton count (atomic number).",
-                        "Apply it: use proton count to identify where an element sits on the periodic table."
+                return formatChemistryMentorResponse({
+                    insight: "An atom is the smallest unit that still behaves like its element, and the element's identity comes from proton count.",
+                    practicalContext: "Once this is clear, periodic table questions and bonding patterns become much easier to read.",
+                    points: [
+                        "Keep the three particles distinct: protons (+), neutrons (0), electrons (-).",
+                        "Use atomic number to identify the element every time.",
+                        "Use mass number as protons + neutrons, not as identity.",
+                        "When in doubt, check proton count first before anything else."
                     ],
-                    gentleDetail: "A small detail to ensure your success: do not mix up mass number with atomic number. Atomic number is only protons.",
-                    closing: "If you want, we can do a one-on-one quick check with 3 practice examples right now."
+                    precisionNote: "Precision note: atomic number is only protons, so changing neutrons gives isotopes, not a new element.",
+                    closing: "Send one atom question and I will walk it through with you clearly and quickly."
                 });
             }
             if (q.includes('periodic') || q.includes('table')) {
-                return formatGroundedResponse({
-                    appreciation: "Great question. I appreciate how organized your approach is when you ask about the periodic table first.",
-                    practicalContext: "This is practical because the periodic table is your map for predicting reactions and properties.",
-                    moodHint: q,
-                    steps: [
-                        "Read rows as periods: they show increasing atomic number left to right.",
-                        "Read columns as groups: elements in the same group share similar behavior.",
-                        "Use region clues: metals are mostly left/center, nonmetals are mostly right.",
-                        "Apply prediction: check group first when estimating valence and reactivity."
+                return formatChemistryMentorResponse({
+                    insight: "The periodic table is a prediction tool: group tells you behavior, period tells you energy level progression.",
+                    practicalContext: "If you read it that way, you can estimate valence trends and reactivity without memorizing every element.",
+                    points: [
+                        "Rows (periods) increase atomic number left to right.",
+                        "Columns (groups) share similar outer-electron behavior.",
+                        "Metals are mainly left/center; nonmetals are mainly right.",
+                        "For quick predictions, start with group trends before exceptions."
                     ],
-                    gentleDetail: "One detail that helps avoid confusion: group number trends are useful, but transition metals can have multiple common charges.",
-                    closing: "We can go step-by-step through one element together if you want a calm confidence check."
+                    precisionNote: "Precision note: transition metals often have multiple common charges, so do not force a single fixed charge there.",
+                    closing: "Give me one element and I will map its likely behavior with you."
                 });
             }
             if (q.includes('measurement') || q.includes('metric')) {
-                return formatGroundedResponse({
-                    appreciation: "I appreciate you asking about measurements. Care with units is exactly what strong students do.",
-                    practicalContext: "In real lab and healthcare settings, unit accuracy protects people and improves results.",
-                    moodHint: q,
-                    steps: [
-                        "Start with the base unit: m for length, g for mass, L for volume.",
-                        "Write the conversion factor before calculating.",
-                        "Cancel units visually so only the target unit remains.",
-                        "Round using correct significant figures at the end."
+                return formatChemistryMentorResponse({
+                    insight: "Unit work is chemistry's accuracy backbone; if units are clean, the math usually falls into place.",
+                    practicalContext: "This matters in lab practice because small unit errors can distort results and conclusions.",
+                    points: [
+                        "Write the known value with units first.",
+                        "Set up a conversion factor so unwanted units cancel.",
+                        "Carry full digits through calculation.",
+                        "Round only at the final line using correct significant figures."
                     ],
-                    gentleDetail: "A quiet correction that ensures success: convert first, then round. Early rounding can create avoidable errors.",
-                    closing: "If you share one conversion problem, we will solve it together line by line."
+                    precisionNote: "Precision note: early rounding is a common source of avoidable error, so keep full precision until the end.",
+                    closing: "Paste one conversion problem and we will solve it together in clean notation."
                 });
             }
-            return formatGroundedResponse({
-                appreciation: "Thank you for checking in. Your consistency and effort really stand out.",
-                practicalContext: "To keep this useful, we can stay concrete and solve one real chemistry task at a time.",
-                moodHint: q,
-                steps: [
-                    "Tell me your topic (atoms, periodic table, measurements, reactions, or quiz prep).",
-                    "Share what part feels unclear.",
-                    "We will build a practical mini-plan to complete it today."
+            return formatChemistryMentorResponse({
+                insight: "Let's anchor this in one chemistry target so your next move is clear and useful.",
+                practicalContext: "Clear scope gives faster progress than broad review when you are studying under time pressure.",
+                points: [
+                    "Choose one topic: atoms, periodic table, measurements, reactions, or quiz prep.",
+                    "Share the exact point that feels uncertain.",
+                    "I will give a concise, assignment-ready explanation with one quick check question."
                 ],
-                gentleDetail: "Small details matter, so I may gently point out key terms or units that need tightening.",
-                closing: "I am here with you one-on-one. Ask your next question when you are ready."
+                precisionNote: "Precision note: using exact terms and units now saves major corrections later.",
+                closing: "Send your question and we will pin it down right away."
             });
         }
 
@@ -873,6 +884,98 @@
             return `week${parseInt(match[1], 10)}`;
         }
 
+        const SUBJECT_WEEK_PLAYBOOK = {
+            week1: {
+                focus: 'Define philosophy of religion as conceptual analysis, argument testing, and disagreement mapping.',
+                distinction: 'Clarification is different from persuasion; analysis is different from personal belief statement.',
+                assignment: 'Discussion post: explain what philosophy is for, identify your challenge, and ask one genuine question to a peer.'
+            },
+            week2: {
+                focus: 'Separate faith as belief from faith as trust and track how each changes argument standards.',
+                distinction: 'Belief claims and authority claims are not identical.',
+                assignment: 'Concept brief: define one faith-related concept and show one SEP distinction that prevents confusion.'
+            },
+            week3: {
+                focus: 'Identify whether religious language is literal, analogical, or symbolic before evaluating arguments.',
+                distinction: 'Language model determines valid criticism; method must match the model.',
+                assignment: 'Assignment: explain one language model and one consequence for argument evaluation.'
+            },
+            week4: {
+                focus: 'Reconstruct ontological argument structure without importing empirical assumptions.',
+                distinction: 'Conceptual necessity arguments differ from world-based inference arguments.',
+                assignment: 'Argument Analysis #1: state assumption, logical move, conclusion, then classify one SEP pressure.'
+            },
+            week5: {
+                focus: 'Frame cosmological arguments around explanation types, contingency, and necessity.',
+                distinction: 'Causal explanation and metaphysical explanation are related but not identical.',
+                assignment: 'Concept Extraction Brief #3: define one key concept and one distinction about explanation standards.'
+            },
+            week6: {
+                focus: 'Treat teleological arguments as explanation claims, not as automatic proof or disproof.',
+                distinction: 'Probability language and explanatory language should not be collapsed into one test.',
+                assignment: 'Argument Analysis #2: reconstruct one design argument and identify one pressure point from SEP.'
+            },
+            week7: {
+                focus: 'Distinguish atheism and agnosticism by belief commitments and epistemic stance.',
+                distinction: 'Suspension of judgment is not equivalent to denial.',
+                assignment: 'Concept Extraction Brief #4: define one nonbelief concept and show one distinction that prevents category error.'
+            },
+            week8: {
+                focus: 'Separate logical and evidential problem-of-evil arguments before evaluating force.',
+                distinction: 'Contradiction claims and plausibility claims impose different burdens.',
+                assignment: 'Argument Structure Analysis #3: reconstruct one version and classify the pressure by logic, assumptions, or evidence.'
+            },
+            week9: {
+                focus: 'Evaluate religious experience by epistemic criteria rather than intensity alone.',
+                distinction: 'Sincerity of experience is not equal to justified conclusion about cause.',
+                assignment: 'Philosophical Tension Memo #1: state one unresolved epistemic tension and what is lost in each direction.'
+            },
+            week10: {
+                focus: 'Analyze miracles through testimony quality, background probability, and proof standards.',
+                distinction: 'Possibility of an event is not sufficient for justified acceptance of a report.',
+                assignment: 'Argument Structure Analysis #4: reconstruct one argument and identify one evidential pressure.'
+            },
+            week11: {
+                focus: 'Treat revelation as an epistemic authority question with interpretation limits.',
+                distinction: 'Claiming revelation does not remove the need for interpretive and rational standards.',
+                assignment: 'Philosophical Tension Memo #2: identify one revelation tension and explain what each resolution sacrifices.'
+            },
+            week12: {
+                focus: 'Examine whether morality depends on divine command without collapsing ethics into obedience.',
+                distinction: 'Normative authority and moral truth are connected but not trivially identical.',
+                assignment: 'Philosophical Tension Memo #3: map one pressure in religion-and-morality debate with precise terms.'
+            },
+            week13: {
+                focus: 'Use feminist philosophy of religion to test conceptual frameworks for hidden power assumptions.',
+                distinction: 'Structural critique is philosophical analysis, not merely sociological complaint.',
+                assignment: 'Philosophical Tension Memo #4: analyze one concept reframed by feminist critique and unresolved tension.'
+            },
+            week14: {
+                focus: 'Analyze religion-and-violence through mechanism, dehumanization, and moral exclusion.',
+                distinction: 'Explaining violence mechanisms is different from morally justifying violence.',
+                assignment: 'Memo #5 plus Comparative Analysis prep: connect mechanism analysis to a second course problem.'
+            },
+            week15: {
+                focus: 'Treat pluralism as an epistemic disagreement problem, not only a social tolerance issue.',
+                distinction: 'Sincerity and rational compatibility are different evaluative dimensions.',
+                assignment: 'Concept Extraction Brief #5: define one pluralism concept and one SEP distinction about disagreement.'
+            },
+            week16: {
+                focus: 'Frame doubt as a rational outcome under persistent peer disagreement.',
+                distinction: 'Unresolved disagreement can reflect method limits rather than analytical failure.',
+                assignment: 'Capstone comparative analysis: compare two course problems by shared method and unresolved pressure.'
+            }
+        };
+
+        function getActiveSubjectWeekKey() {
+            const picker = document.getElementById('philosophy-week-jump');
+            if (!picker || !picker.value) {
+                return null;
+            }
+
+            return picker.value;
+        }
+
         function getPhilosophyWeekLabel(weekKey) {
             const picker = document.getElementById('philosophy-week-jump');
             if (!picker) {
@@ -884,7 +987,7 @@
         }
 
         function buildWeekSpecificPhilosophyReply(question, q) {
-            const weekKey = extractRequestedWeekKey(question);
+            const weekKey = extractRequestedWeekKey(question) || getActiveSubjectWeekKey();
             if (!weekKey) {
                 return null;
             }
@@ -894,25 +997,23 @@
                 return null;
             }
 
+            const guide = SUBJECT_WEEK_PLAYBOOK[weekKey];
+            if (!guide) {
+                return null;
+            }
+
             const assignmentRequested = /assignment|brief|analysis|memo|discussion|due|write|submit/.test(q);
 
-            return formatGroundedResponse({
-                appreciation: `I appreciate how clearly you are focusing on ${weekLabel}. That focus helps you study efficiently.`,
-                practicalContext: `In practical coursework terms, the best approach is to separate the structure of ${weekLabel} from nearby topics and work the required tasks in order.`,
-                moodHint: q,
-                steps: [
-                    `Open ${weekLabel} in the module panel so we work from the exact week instructions.`,
-                    "Extract three core items: the key concept, one structural distinction, and one unresolved pressure point.",
-                    assignmentRequested
-                        ? "Draft your assignment in two parts: concept explanation first, structural distinction second."
-                        : "Tell me whether you want reading support, assignment planning, or concept clarification first.",
-                    "Run a final precision check: use course terms exactly and avoid evaluation language."
-                ],
-                gentleDetail: "A small detail that protects your grade: do not mix arguments across weeks unless your prompt explicitly asks for comparison.",
-                closing: assignmentRequested
-                    ? "Share your draft paragraph and I will help tighten it line by line."
-                    : "If you share your exact question for this week, we can solve it step by step together."
-            });
+            return `${weekLabel}\n\n` +
+                `Answer: ${guide.focus}\n\n` +
+                `Core distinction: ${guide.distinction}\n\n` +
+                `Use this structure now:\n` +
+                `1. State the week's central claim in one sentence.\n` +
+                `2. Apply the distinction to your specific question.\n` +
+                `3. End with one unresolved pressure point from the week.\n\n` +
+                (assignmentRequested
+                    ? `Assignment fit: ${guide.assignment}`
+                    : `If you paste your exact prompt, I will draft a submission-ready response in this format.`);
         }
 
         function buildPhilosophyContextReply(question) {
@@ -1104,7 +1205,7 @@
                         "Part B: pick one distinction from the SEP companion and show what confusion it prevents."
                     ],
                     gentleDetail: "To ensure success, avoid broad summaries. Stay focused on one concept and one distinction.",
-                    closing: "If you share your draft, we can review it together in a calm one-on-one way."
+                    closing: "Share your draft and I will tighten it for clarity, precision, and assignment fit."
                 });
             }
             if (q.includes('faith')) {
@@ -1144,10 +1245,10 @@
                 steps: [
                     "Tell me your week or assignment.",
                     "Share the exact part that feels unclear.",
-                    "We will create a concrete step-by-step plan and complete the next step together."
+                    "I will give you a concise response you can immediately use."
                 ],
                 gentleDetail: "If a detail is missing, I will point it out gently so we can strengthen your final submission.",
-                closing: "You are not doing this alone. We can handle it one step at a time in this one-on-one space."
+                closing: "Send the prompt and I will draft it in a polished, submission-ready style."
             });
         }
 
@@ -1282,14 +1383,14 @@
             if (chemistryChatMessages.length === 0) {
                 chemistryChatMessages.push({
                     role: 'ai',
-                    text: "I noticed your commitment in showing up today, and I appreciate that dedication. I am Ms. Maya Alvarado Lopez, your Grounded Mentor. In this one-on-one space, we will use calm, tried-and-true steps to build a solid foundation in chemistry together."
+                    text: "I am Ms. Maya Alvarado Lopez. Bring me your chemistry question and I will give you a clear, practical answer you can use right away."
                 });
             }
 
             if (philosophyChatMessages.length === 0) {
                 philosophyChatMessages.push({
                     role: 'ai',
-                    text: "I noticed the effort you are bringing, and I appreciate it. I am Ms. Maya Alvarado Lopez, your Grounded Mentor. Let us approach philosophy with steady structure, practical clarity, and one careful step at a time so we build strong work together."
+                    text: "I am Ms. Maya Alvarado Lopez. Ask your philosophy question, and I will give you a direct, precise answer in a warm, practical voice."
                 });
             }
             

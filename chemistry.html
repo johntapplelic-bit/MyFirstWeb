@@ -2808,7 +2808,7 @@
         const QUIZ_SELECTION_KEY = 'chemistry-selected-quiz-v1';
         const TOKEN_SETTINGS_KEY = 'chemistry-token-saver-settings-v1';
         const TOKEN_SUMMARY_KEY = 'chemistry-token-summary-v1';
-        const RESPONSE_CACHE_KEY = 'chemistry-response-cache-v1';
+        const RESPONSE_CACHE_KEY = 'chemistry-response-cache-v2';
         const LIVE_API_SETTINGS_KEY = 'chemistry-live-api-settings-v3';
         const MAX_CACHE_ITEMS = 80;
 
@@ -3330,7 +3330,7 @@
             return [
                 {
                     role: 'system',
-                    content: 'You are Ms. Maya Alvarado Lopez, a grounded college teacher and personal coach. Be calm, patient, warm, and steady. Give practical, concrete, step-by-step guidance with gentle direct honesty. Use a one-on-one office-hours tone, avoid drama, and de-escalate stress by redirecting to the next practical step. Use metaphors like building a solid foundation or planting seeds for a harvest when useful. Prioritize factual chemistry guidance. ' + conciseInstruction
+                    content: 'You are Ms. Maya Alvarado Lopez, a warm, practical chemistry mentor with grounded ISFJ Taurus energy. Start with the key answer immediately, then support it with concise, accurate chemistry reasoning. Use natural language, avoid robotic signposts, and avoid self-referential disclaimers or performative praise statements. Prioritize factual chemistry guidance and assignment-ready clarity. ' + conciseInstruction
                 },
                 {
                     role: 'user',
@@ -4033,7 +4033,7 @@
 
             appendChatMessage(
                 'ai',
-                'Conversation cleared. I appreciate your commitment to learning. Let us return to a calm starting point and rebuild with practical, step-by-step support.',
+                'Conversation cleared. Ask your next chemistry question and I will give you a clear, practical answer right away.',
                 'Ms. Maya Alvarado Lopez'
             );
         }
@@ -4072,8 +4072,8 @@
                 return raw;
             }
 
-            // Avoid wrapping a response that already includes the coaching scaffold.
-            if (raw.includes("Let's work through this together") || raw.includes('To support your success')) {
+            // Avoid wrapping a response that already includes the current coaching scaffold.
+            if (raw.includes('Define the key idea in one clear sentence.') || raw.includes('Run a precision check for units, terms, and assumptions.')) {
                 return raw;
             }
 
@@ -4090,18 +4090,16 @@
             }
 
             const groundingLine = stressDetected
-                ? "Let's pull up a chair, have a cup of tea, and look at the details one by one."
-                : 'We will use steady, tried-and-true steps so we can build a solid foundation together.';
+                ? 'Take a breath and focus on the most actionable chemistry detail first.'
+                : 'Keep the explanation concrete, accurate, and easy to apply.';
 
-            return `I noticed the care you are putting into this, and I appreciate your dedication.\n\n` +
-                `${practicalLink}\n\n` +
+            return `${practicalLink}\n\n` +
                 `${groundingLine}\n\n` +
-                `Let's work through this together:\n` +
-                `1. Start with the key idea and define it in one clear sentence.\n` +
-                `2. Apply it to your specific question step by step.\n` +
-                `3. Do a quick detail check (units, terms, or assumptions) to ensure success.\n\n` +
+                `1. Define the key idea in one clear sentence.\n` +
+                `2. Apply it directly to your specific question.\n` +
+                `3. Run a precision check for units, terms, and assumptions.\n\n` +
                 `${raw}\n\n` +
-                `To support your success, share the exact part that still feels unclear and we will refine it one-on-one.`;
+                `Share the exact part that still feels unclear and I will refine it with you.`;
         }
 
         async function askAI() {
@@ -4206,6 +4204,18 @@
             }
         }
 
+        function hasWholeWord(text, word) {
+            const safeWord = String(word || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const pattern = new RegExp(`\\b${safeWord}\\b`, 'i');
+            return pattern.test(String(text || ''));
+        }
+
+        function asksAboutElement(text, name, symbol) {
+            const q = String(text || '').toLowerCase();
+            const elementContext = /(element|symbol|atomic|periodic|what is|tell me about|define)/.test(q);
+            return hasWholeWord(q, name) || (elementContext && hasWholeWord(q, symbol));
+        }
+
         function getCurrentAIResponse(question) {
             // Simple AI responses for common chemistry questions
             const responses = {
@@ -4252,25 +4262,25 @@
                     response = "Nucleic acids like DNA and RNA store genetic information. Cells use that information to build proteins via transcription and translation.";
                 } else if (question.includes('metabolism') || question.includes('atp') || question.includes('cellular respiration')) {
                     response = "Metabolic pathways like glycolysis and the citric acid cycle convert nutrients into ATP, the energy currency that powers cellular processes.";
-                } else if (question.includes('aluminum') || question.includes('al')) {
+                } else if (asksAboutElement(question, 'aluminum', 'al')) {
                     response = "Aluminum (Al) is element 13 with atomic mass 26.98. It's a lightweight, silvery metal used in cans, foil, and aircraft.";
-                } else if (question.includes('gold') || question.includes('au')) {
+                } else if (asksAboutElement(question, 'gold', 'au')) {
                     response = "Gold (Au) is element 79 with atomic mass 197.0. It's a dense, yellow metal that's highly valued and used in jewelry and electronics.";
-                } else if (question.includes('oxygen') || question.includes('o')) {
+                } else if (asksAboutElement(question, 'oxygen', 'o')) {
                     response = "Oxygen (O) is element 8 with atomic mass 16.00. It's a colorless, odorless gas essential for respiration and combustion.";
-                } else if (question.includes('hydrogen') || question.includes('h')) {
+                } else if (asksAboutElement(question, 'hydrogen', 'h')) {
                     response = "Hydrogen (H) is element 1 with atomic mass 1.008. It's the lightest element and the most abundant in the universe.";
-                } else if (question.includes('carbon') || question.includes('c')) {
+                } else if (asksAboutElement(question, 'carbon', 'c')) {
                     response = "Carbon (C) is element 6 with atomic mass 12.01. It's the basis of all organic chemistry and forms the backbone of life.";
-                } else if (question.includes('iron') || question.includes('fe')) {
+                } else if (asksAboutElement(question, 'iron', 'fe')) {
                     response = "Iron (Fe) is element 26 with atomic mass 55.85. It's a magnetic metal essential for steel production and biological processes.";
-                } else if (question.includes('copper') || question.includes('cu')) {
+                } else if (asksAboutElement(question, 'copper', 'cu')) {
                     response = "Copper (Cu) is element 29 with atomic mass 63.55. It's an excellent conductor used in electrical wiring and plumbing.";
-                } else if (question.includes('silver') || question.includes('ag')) {
+                } else if (asksAboutElement(question, 'silver', 'ag')) {
                     response = "Silver (Ag) is element 47 with atomic mass 107.9. It's a precious metal known for its conductivity and use in jewelry.";
-                } else if (question.includes('uranium') || question.includes('u')) {
+                } else if (asksAboutElement(question, 'uranium', 'u')) {
                     response = "Uranium (U) is element 92 with atomic mass 238.0. It's a radioactive metal used in nuclear energy and weapons.";
-                } else if (question.includes('helium') || question.includes('he')) {
+                } else if (asksAboutElement(question, 'helium', 'he')) {
                     response = "Helium (He) is element 2 with atomic mass 4.003. It's a noble gas used in balloons and as a cooling gas in scientific instruments.";
                 } else if (question.includes('atomic number') || question.includes('atomic mass')) {
                     response = "The atomic number is the number of protons in an element's nucleus, while atomic mass is the average mass of all isotopes of that element.";
@@ -4522,25 +4532,25 @@
                     response = "DNA/RNA store genetic information for protein synthesis via transcription/translation.";
                 } else if (question.includes('metabolism') || question.includes('atp') || question.includes('cellular respiration')) {
                     response = "Metabolism converts nutrients to ATP via glycolysis, citric acid cycle for cellular energy.";
-                } else if (question.includes('aluminum') || question.includes('al')) {
+                } else if (asksAboutElement(question, 'aluminum', 'al')) {
                     response = "Aluminum (Al, #13, mass 26.98) is lightweight metal used in cans, foil, aircraft.";
-                } else if (question.includes('gold') || question.includes('au')) {
+                } else if (asksAboutElement(question, 'gold', 'au')) {
                     response = "Gold (Au, #79, mass 197.0) is dense, yellow metal valued for jewelry, electronics.";
-                } else if (question.includes('oxygen') || question.includes('o')) {
+                } else if (asksAboutElement(question, 'oxygen', 'o')) {
                     response = "Oxygen (O, #8, mass 16.00) is essential gas for respiration, combustion.";
-                } else if (question.includes('hydrogen') || question.includes('h')) {
+                } else if (asksAboutElement(question, 'hydrogen', 'h')) {
                     response = "Hydrogen (H, #1, mass 1.008) is lightest element, most abundant in universe.";
-                } else if (question.includes('carbon') || question.includes('c')) {
+                } else if (asksAboutElement(question, 'carbon', 'c')) {
                     response = "Carbon (C, #6, mass 12.01) forms basis of organic chemistry, life's backbone.";
-                } else if (question.includes('iron') || question.includes('fe')) {
+                } else if (asksAboutElement(question, 'iron', 'fe')) {
                     response = "Iron (Fe, #26, mass 55.85) is magnetic metal essential for steel, biological processes.";
-                } else if (question.includes('copper') || question.includes('cu')) {
+                } else if (asksAboutElement(question, 'copper', 'cu')) {
                     response = "Copper (Cu, #29, mass 63.55) is excellent conductor for wiring, plumbing.";
-                } else if (question.includes('silver') || question.includes('ag')) {
+                } else if (asksAboutElement(question, 'silver', 'ag')) {
                     response = "Silver (Ag, #47, mass 107.9) is precious metal used in jewelry, conductivity.";
-                } else if (question.includes('uranium') || question.includes('u')) {
+                } else if (asksAboutElement(question, 'uranium', 'u')) {
                     response = "Uranium (U, #92, mass 238.0) is radioactive metal for nuclear energy, weapons.";
-                } else if (question.includes('helium') || question.includes('he')) {
+                } else if (asksAboutElement(question, 'helium', 'he')) {
                     response = "Helium (He, #2, mass 4.003) is noble gas for balloons, scientific cooling.";
                 } else if (question.includes('atomic number') || question.includes('atomic mass')) {
                     response = "Atomic number = protons in nucleus. Atomic mass = average isotope mass.";
@@ -4657,7 +4667,7 @@
             if (chatMessages.length === 0) {
                 appendChatMessage(
                     'ai',
-                    "Welcome. I noticed the effort you are investing, and I appreciate your dedication. I am Ms. Maya Alvarado Lopez, your Grounded Mentor. In this one-on-one space, we will use steady, practical methods and build a solid foundation in chemistry together, one careful step at a time.",
+                    "I am Ms. Maya Alvarado Lopez. Bring me your chemistry question and I will give you a direct, practical answer you can use right away.",
                     'Ms. Maya Alvarado Lopez'
                 );
                 refreshConversationSummary();

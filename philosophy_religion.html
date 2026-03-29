@@ -1615,10 +1615,10 @@
             }
 
             return text
-                .replace(/Taurus-ISFJ/gi, "Grounded Mentor")
-                .replace(/Taurus woman/gi, "grounded")
-                .replace(/ISFJ \(Defender\)/gi, "grounded")
-                .replace(/ISFJ mentor\s*&\s*coach/gi, "grounded mentor & coach");
+                .replace(/Taurus-ISFJ/gi, "Ms. Maya Alvarado Lopez")
+                .replace(/Taurus woman/gi, "trusted mentor")
+                .replace(/ISFJ \(Defender\)/gi, "trusted mentor")
+                .replace(/ISFJ mentor\s*&\s*coach/gi, "trusted mentor");
         }
 
         function sanitizeMessages(messages) {
@@ -1681,14 +1681,15 @@
         function buildLivePhilosophySystemPrompt(mode, context) {
             const directMode = mode === "direct";
             const styleGuide = directMode
-                ? "Return a direct, assignment-ready answer in your own words. Be concise, structured, and academically precise. Do not output meta-commentary."
-                : "Use a calm one-on-one mentor tone with practical guidance, concise encouragement, and clear step-by-step structure.";
+                ? "Start with the core answer immediately. Return a direct, assignment-ready response in your own words. Be concise, structured, and academically precise."
+                : "Use a warm, practical mentor voice with natural language. Keep structure implicit, avoid robotic signposting, and stay philosophically precise.";
 
             return [
-                "You are Ms. Maya Alvarado Lopez, a grounded Philosophy of Religion instructor.",
+                "You are Ms. Maya Alvarado Lopez, a brilliant conversational Philosophy of Religion mentor with grounded ISFJ Taurus energy.",
                 styleGuide,
                 "Ground every response in the provided week context when available.",
                 "Do not invent readings or requirements not present in the context.",
+                "Avoid self-referential disclaimers and performative praise statements.",
                 "When the student asks about an assignment, respond with draft-ready wording and a clear structure they can submit after personal revision.",
                 `Current week context title: ${context.title}`,
                 context.summary ? `Current week context summary: ${context.summary}` : ""
@@ -1744,6 +1745,89 @@
             return `week${parseInt(match[1], 10)}`;
         }
 
+        const WEEK_PLAYBOOK = {
+            week1: {
+                focus: "Define philosophy of religion as conceptual analysis, argument testing, and disagreement mapping.",
+                distinction: "Clarification is different from persuasion; analysis is different from personal belief statement.",
+                assignment: "Discussion post: explain what philosophy is for, identify your challenge, and ask one genuine peer question."
+            },
+            week2: {
+                focus: "Separate faith as belief from faith as trust and track how each changes argument standards.",
+                distinction: "Belief claims and authority claims are not identical.",
+                assignment: "Concept brief: define one faith-related concept and one SEP distinction that prevents confusion."
+            },
+            week3: {
+                focus: "Identify whether religious language is literal, analogical, or symbolic before evaluating arguments.",
+                distinction: "Language model determines valid criticism; method must match the model.",
+                assignment: "Explain one language model and one consequence for argument evaluation."
+            },
+            week4: {
+                focus: "Reconstruct ontological argument structure without importing empirical assumptions.",
+                distinction: "Conceptual necessity arguments differ from world-based inference arguments.",
+                assignment: "Argument Analysis #1: state assumption, logical move, conclusion, and classify one SEP pressure."
+            },
+            week5: {
+                focus: "Frame cosmological arguments around explanation types, contingency, and necessity.",
+                distinction: "Causal explanation and metaphysical explanation are related but not identical.",
+                assignment: "Concept Extraction Brief #3: define one key concept and one distinction about explanation standards."
+            },
+            week6: {
+                focus: "Treat teleological arguments as explanation claims, not automatic proof or disproof.",
+                distinction: "Probability language and explanatory language should not be collapsed into one test.",
+                assignment: "Argument Analysis #2: reconstruct one design argument and identify one SEP pressure point."
+            },
+            week7: {
+                focus: "Distinguish atheism and agnosticism by belief commitments and epistemic stance.",
+                distinction: "Suspension of judgment is not equivalent to denial.",
+                assignment: "Concept Extraction Brief #4: define one nonbelief concept and one distinction that prevents category error."
+            },
+            week8: {
+                focus: "Separate logical and evidential problem-of-evil arguments before evaluating force.",
+                distinction: "Contradiction claims and plausibility claims impose different burdens.",
+                assignment: "Argument Structure Analysis #3: reconstruct one version and classify the pressure type."
+            },
+            week9: {
+                focus: "Evaluate religious experience by epistemic criteria rather than intensity alone.",
+                distinction: "Sincerity of experience is not equal to justified conclusion about cause.",
+                assignment: "Philosophical Tension Memo #1: state one unresolved epistemic tension and trade-offs."
+            },
+            week10: {
+                focus: "Analyze miracles through testimony quality, background probability, and proof standards.",
+                distinction: "Possibility of an event is not sufficient for justified acceptance of a report.",
+                assignment: "Argument Structure Analysis #4: reconstruct one argument and identify one evidential pressure."
+            },
+            week11: {
+                focus: "Treat revelation as an epistemic authority question with interpretation limits.",
+                distinction: "Claiming revelation does not remove interpretive and rational standards.",
+                assignment: "Philosophical Tension Memo #2: identify one revelation tension and what each resolution sacrifices."
+            },
+            week12: {
+                focus: "Examine whether morality depends on divine command without collapsing ethics into obedience.",
+                distinction: "Normative authority and moral truth are connected but not trivially identical.",
+                assignment: "Philosophical Tension Memo #3: map one pressure in religion-and-morality debate precisely."
+            },
+            week13: {
+                focus: "Use feminist philosophy of religion to test conceptual frameworks for hidden power assumptions.",
+                distinction: "Structural critique is philosophical analysis, not merely sociological complaint.",
+                assignment: "Philosophical Tension Memo #4: analyze one concept reframed by feminist critique and unresolved tension."
+            },
+            week14: {
+                focus: "Analyze religion-and-violence through mechanism, dehumanization, and moral exclusion.",
+                distinction: "Explaining violence mechanisms is different from morally justifying violence.",
+                assignment: "Memo #5 plus Comparative Analysis prep: connect mechanism analysis to a second course problem."
+            },
+            week15: {
+                focus: "Treat pluralism as an epistemic disagreement problem, not only a social tolerance issue.",
+                distinction: "Sincerity and rational compatibility are different evaluative dimensions.",
+                assignment: "Concept Extraction Brief #5: define one pluralism concept and one SEP distinction about disagreement."
+            },
+            week16: {
+                focus: "Frame doubt as a rational outcome under persistent peer disagreement.",
+                distinction: "Unresolved disagreement can reflect method limits rather than analytical failure.",
+                assignment: "Capstone comparative analysis: compare two course problems by shared method and unresolved pressure."
+            }
+        };
+
         function getWeekModuleInfo(weekKey) {
             const module = document.getElementById(weekKey);
             if (!module) {
@@ -1760,7 +1844,9 @@
         }
 
         function buildDynamicWeekReply(question) {
-            const weekKey = extractRequestedWeekKey(question);
+            const activeModule = document.querySelector(".module-content.active");
+            const activeWeekKey = activeModule ? activeModule.id : null;
+            const weekKey = extractRequestedWeekKey(question) || activeWeekKey;
             if (!weekKey) {
                 return null;
             }
@@ -1770,19 +1856,24 @@
                 return null;
             }
 
+            const guide = WEEK_PLAYBOOK[weekKey];
+            if (!guide) {
+                return null;
+            }
+
             const q = String(question || "").toLowerCase();
             const assignmentRequested = /assignment|brief|analysis|memo|discussion|due|write|submit/.test(q);
 
             return `${info.title}\n\n` +
-                `${info.summary || "This week should be approached as a distinct argument unit."}\n\n` +
-                `Use this workflow:\n` +
-                `1. Read this week's required sources in order.\n` +
-                `2. Extract one core concept, one structural distinction, and one unresolved pressure point.\n` +
-                `3. Keep this week separate from other argument types unless your prompt explicitly asks comparison.\n` +
-                `4. Check wording for precision: explain structure and standards, not personal agreement.\n\n` +
+                `Answer: ${guide.focus}\n\n` +
+                `Core distinction: ${guide.distinction}\n\n` +
+                `Use this structure now:\n` +
+                `1. State the week's central claim in one sentence.\n` +
+                `2. Apply the distinction to your exact question.\n` +
+                `3. End with one unresolved pressure point from the week.\n\n` +
                 (assignmentRequested
-                    ? `If you share your draft, I can help revise it to match this week's exact assignment constraints.`
-                    : `If you tell me your exact question from this week, I can walk through it step by step.`);
+                    ? `Assignment fit: ${guide.assignment}`
+                    : `If you paste your exact prompt, I will draft a submission-ready response in this format.`);
         }
 
         function applyGroundedPhilosophyTone(question, baseReply) {
@@ -1791,8 +1882,8 @@
                 return raw;
             }
 
-            // Avoid re-wrapping if the message already includes our scaffold.
-            if (raw.includes("Let's work through this together") || raw.includes("To support your success")) {
+            // Avoid re-wrapping if the message already includes our current scaffold.
+            if (raw.includes("Define the key claim in one clear sentence.") || raw.includes("Run a precision check on concepts, distinctions, and evidence standards.")) {
                 return raw;
             }
 
@@ -1807,18 +1898,16 @@
             }
 
             const groundingLine = stressDetected
-                ? "Let's pull up a chair, have a cup of tea, and look at the details one by one."
-                : "We will use steady, tried-and-true steps so we can build a solid foundation together.";
+                ? "Take a breath and focus on the most actionable philosophical point first."
+                : "Keep the argument clear, structured, and precise.";
 
-            return `I noticed the care you are putting into this, and I appreciate your dedication.\n\n` +
-                `${practicalLine}\n\n` +
+            return `${practicalLine}\n\n` +
                 `${groundingLine}\n\n` +
-                `Let's work through this together:\n` +
-                `1. Start with the key idea and define it in one clear sentence.\n` +
-                `2. Apply it to your specific question step by step.\n` +
-                `3. Do a quick detail check (units, terms, or assumptions) to ensure success.\n\n` +
+                `1. Define the key claim in one clear sentence.\n` +
+                `2. Apply it directly to the specific question or assignment.\n` +
+                `3. Run a precision check on concepts, distinctions, and evidence standards.\n\n` +
                 `${raw}\n\n` +
-                `To support your success, share the exact part that still feels unclear and we will refine it one-on-one.`;
+                `Share the exact part that still feels unclear and I will refine it with you.`;
         }
 
         function buildContextAwareReply(question) {
@@ -1876,6 +1965,11 @@
 
         function buildReply(question) {
             const q = question.toLowerCase();
+
+            const dynamicWeekReply = buildDynamicWeekReply(question);
+            if (dynamicWeekReply) {
+                return dynamicWeekReply;
+            }
 
             if (q.includes("teleological") || q.includes("design argument") || q.includes("fine-tuning") || q.includes("fine tuning")) {
                 return `Teleological arguments ask what kind of explanation design provides in light of modern science.\n\n` +
@@ -2018,11 +2112,6 @@
             const contextReply = buildContextAwareReply(question);
             if (contextReply) {
                 return contextReply;
-            }
-
-            const dynamicWeekReply = buildDynamicWeekReply(question);
-            if (dynamicWeekReply) {
-                return dynamicWeekReply;
             }
 
             return `I'm here to support you through this course, and I want you to know that whatever question you're sitting with is worth exploring together.\n\n` +
@@ -2178,7 +2267,7 @@
             saveMessages([
                 {
                     role: "ai",
-                    text: "Welcome to Philosophy of Religion. I noticed the care you are bringing to your learning, and I appreciate your dedication. I am Ms. Maya Alvarado Lopez, your Grounded Mentor.\n\nIn this one-on-one space, we will stay calm, practical, and steady. We will not rush to abstract conclusions; we will build a solid foundation with clear concepts, strong structure, and careful wording.\n\nIn my experience, students make the strongest progress when we use tried-and-true steps and refine details together. If anything feels heavy, we will pause, ground ourselves, and take the next manageable step.\n\nAsk me about a reading, a discussion post, or your concept brief, and we will work through it together."
+                    text: "I am Ms. Maya Alvarado Lopez. Ask your philosophy question and I will give you a direct, accurate answer with warm, practical guidance."
                 }
             ]);
         } else {
