@@ -2136,52 +2136,45 @@
             const activeTitle = titleEl ? titleEl.textContent.trim() : "";
 
             const requestedWeek = extractRequestedWeekKey(question);
-            const weekInfo = requestedWeek ? getWeekModuleInfo(requestedWeek) : null;
+            const activeWeekKey = activeModule ? activeModule.id : null;
+            const weekKey = requestedWeek || activeWeekKey;
+            const weekInfo = weekKey ? getWeekModuleInfo(weekKey) : null;
             const weekTitle = (weekInfo && weekInfo.title) || activeTitle || "Current Philosophy Week";
-
-            const contextText = activeModule ? String(activeModule.innerText || "").replace(/\s+/g, " ").trim() : "";
-            const stop = new Set(["this", "that", "with", "from", "have", "what", "when", "where", "which", "about", "your", "will", "would", "could", "should", "there", "their", "them", "then", "into", "also", "because", "just", "than"]);
-            const keywords = (q.match(/[a-z]{4,}/g) || []).filter((word) => !stop.has(word));
-
-            const sentences = contextText
-                ? contextText.split(/[.!?]\s+/).map((s) => s.trim()).filter((s) => s.length > 24)
-                : [];
-
-            const highlights = sentences
-                .map((sentence) => {
-                    const lower = sentence.toLowerCase();
-                    let score = 0;
-                    for (const key of keywords) {
-                        if (lower.includes(key)) {
-                            score += 2;
-                        }
-                    }
-                    if (/assignment|brief|memo|analysis|discussion|capstone|required|extract|focus|check/i.test(sentence)) {
-                        score += 1;
-                    }
-                    return { sentence, score };
-                })
-                .sort((a, b) => b.score - a.score)
-                .slice(0, 3)
-                .map((item) => item.sentence.length > 180 ? `${item.sentence.slice(0, 177)}...` : item.sentence);
-
+            const guide = weekKey ? WEEK_PLAYBOOK[weekKey] : null;
             const assignmentAsked = /assignment|brief|memo|analysis|discussion|capstone|submit|due|write|prompt|rubric/.test(q);
+            const badOutcomeAsked = /bad outcomes?|harm|harmful|negative|cost|costs|damage|worse/.test(q);
+            const lens = /justify|evidence|rational|epistem|truth|knowledge/.test(q)
+                ? "epistemic"
+                : /moral|ought|should|right|wrong|duty/.test(q)
+                    ? "normative"
+                    : "consequential";
 
-            if (highlights.length > 0) {
-                return `${weekTitle} - Direct Draft\n\n` +
-                    `Core claim: ${highlights[0]}\n\n` +
-                    `Supporting point: ${highlights[1] || highlights[0]}\n\n` +
-                    `Precision check: ${highlights[2] || highlights[0]}\n\n` +
-                    (assignmentAsked
-                        ? `Draft format:\n1. Define the assigned concept.\n2. Explain one structural distinction from this week.\n3. Show what philosophical confusion that distinction prevents.`
-                        : `Answer format:\n1. State your position in one sentence.\n2. Support it with one distinction from this week.\n3. End with one implication for the debate.`);
+            if (weekKey === "week15" && badOutcomeAsked) {
+                const target = q.includes("pluralism")
+                    ? "pluralism"
+                    : q.includes("exclusivism")
+                        ? "exclusivism"
+                        : "the position";
+
+                return `${weekTitle}\n\n` +
+                    `A strong argument is a ${lens} harm argument against ${target}: if ${target} is treated as sufficient on its own, it produces epistemic and social costs rather than resolving disagreement.\n\n` +
+                    `Use this draft claim: religious diversity is an epistemic challenge, so a view that ignores peer disagreement tends to harden polarization, reduce mutual intelligibility, and weaken standards for rational revision.\n\n` +
+                    `Add one pressure line: sincerity does not remove incompatibility, so goodwill cannot replace justification standards.\n\n` +
+                    `Close with the trade-off: ${target} may preserve identity clarity, but it risks epistemic closure and poorer dialogue outcomes under persistent disagreement.`;
             }
 
-            return `Direct Draft\n\n` +
-                `1. Define the key concept in one sentence.\n` +
-                `2. Add one required distinction from the week.\n` +
-                `3. Explain what that distinction clarifies in the debate.\n` +
-                `4. Keep wording analytical, not evaluative.`;
+            if (guide) {
+                return `${weekTitle}\n\n` +
+                    `Claim: ${guide.focus}\n\n` +
+                    `Argument: ${guide.distinction} This matters because weak distinctions create category errors, and category errors damage philosophical precision and fair evaluation.\n\n` +
+                    `Application: connect the claim to your exact prompt and show one consequence for interpretation, evidence standards, or disagreement method.\n\n` +
+                    (assignmentAsked
+                        ? `Assignment-ready close: ${guide.assignment}`
+                        : `If you paste your exact prompt sentence, I will convert this into a 300-400 word submission-ready response.`);
+            }
+
+            return `Direct draft\n\n` +
+                `State one clear claim, add one distinction that prevents confusion, and end with one unresolved pressure point. Keep wording analytical and assignment-focused.`;
         }
 
         async function askAI() {

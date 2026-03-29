@@ -30,4 +30,8 @@ jobs:
         pip install -r requirements.txt
     - name: Run Tests
       run: |
-        python manage.py test
+        if [ -f manage.py ]; then
+          python manage.py test
+        else
+          echo "manage.py not found. Skipping Django tests for this repository."
+        fi
