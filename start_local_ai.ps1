@@ -71,6 +71,37 @@ function Get-PrimaryIPv4 {
     return "127.0.0.1"
 }
 
+function Ensure-FirewallRule {
+    param([int]$Port)
+
+    $ruleName = "MyFirstWeb LAN (port $Port)"
+
+    $existing = Get-NetFirewallRule -DisplayName $ruleName -ErrorAction SilentlyContinue
+    if ($existing) {
+        Write-Step "Firewall rule '$ruleName' already exists."
+        return
+    }
+
+    Write-Step "Firewall rule not found. Requesting elevated permission to add it..."
+
+    $addRuleCmd = "New-NetFirewallRule -DisplayName '$ruleName' -Direction Inbound -Protocol TCP -LocalPort $Port -Action Allow -Profile Any | Out-Null; Write-Host 'Firewall rule added.'"
+
+    $isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+
+    if ($isAdmin) {
+        Invoke-Expression $addRuleCmd
+        Write-Step "Firewall rule '$ruleName' added."
+    } else {
+        try {
+            Start-Process powershell.exe -ArgumentList "-NoProfile -ExecutionPolicy Bypass -Command `"$addRuleCmd`"" -Verb RunAs -Wait -ErrorAction Stop
+            Write-Step "Firewall rule '$ruleName' added via elevation."
+        } catch {
+            Write-Warning "Could not add firewall rule automatically. If LAN access fails, run this manually in an elevated PowerShell:"
+            Write-Warning "  New-NetFirewallRule -DisplayName '$ruleName' -Direction Inbound -Protocol TCP -LocalPort $Port -Action Allow"
+        }
+    }
+}
+
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 Set-Location $scriptDir
 
@@ -105,6 +136,11 @@ if (-not $env:OLLAMA_API_ENDPOINT) {
 $pythonExe = Join-Path $scriptDir ".venv\Scripts\python.exe"
 if (-not (Test-Path $pythonExe)) {
     throw "Missing .venv Python at .venv\\Scripts\\python.exe. Create your venv first."
+}
+
+# Ensure the Windows Firewall allows LAN traffic on the proxy port (skipped in LocalOnly mode)
+if (-not $LocalOnly) {
+    Ensure-FirewallRule -Port ([int]$env:PROXY_PORT)
 }
 
 $ollamaCommand = Get-Command ollama -ErrorAction SilentlyContinue
