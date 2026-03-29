@@ -27,8 +27,44 @@ Optional environment variables:
 from __future__ import annotations
 
 import os
+import subprocess
+import sys
 from pathlib import Path
 from typing import Any, Dict
+
+APP_DIR = Path(__file__).resolve().parent
+
+
+def _relaunch_with_project_venv_if_needed() -> None:
+    """Prefer the project virtualenv interpreter when available.
+
+    This avoids common dependency errors when the script is launched with a
+    global Python instead of `.venv`.
+    """
+    if os.environ.get("MYFIRSTWEB_VENV_BOOTSTRAPPED") == "1":
+        return
+
+    venv_python = APP_DIR / ".venv" / "Scripts" / "python.exe"
+    if not venv_python.exists():
+        return
+
+    try:
+        current_python = Path(sys.executable).resolve()
+        target_python = venv_python.resolve()
+    except OSError:
+        return
+
+    if current_python == target_python:
+        return
+
+    relaunch_env = os.environ.copy()
+    relaunch_env["MYFIRSTWEB_VENV_BOOTSTRAPPED"] = "1"
+    relaunch_cmd = [str(target_python), str(APP_DIR / "proxy_server.py"), *sys.argv[1:]]
+    print(f"[proxy_server] Re-launching with project venv: {target_python}")
+    raise SystemExit(subprocess.call(relaunch_cmd, cwd=str(APP_DIR), env=relaunch_env))
+
+
+_relaunch_with_project_venv_if_needed()
 
 import requests
 from flask import Flask, jsonify, request, send_from_directory
@@ -36,7 +72,6 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app, resources={r"/api/*": {"origins": "*"}})
-APP_DIR = Path(__file__).resolve().parent
 
 
 def _load_env_file() -> None:
